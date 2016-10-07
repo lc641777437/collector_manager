@@ -7,6 +7,7 @@
 
 #include <QSerialPort>
 #include <QSerialPortInfo>
+#include <QTimer>
 
 namespace Ui {
 class UartThread;
@@ -26,6 +27,8 @@ public:
 
     QSerialPort *my_serialport;
 
+    QTimer *timer;
+
 
 
 protected:
@@ -41,6 +44,8 @@ private:
 
 private slots:
     void UART_RX_Handler();
+public slots:
+    void CommandProc();
 
 };
 

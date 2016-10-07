@@ -17,13 +17,16 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     qcustomplot.cpp \
     uratthread.cpp \
-    graphthread.cpp
+    graphthread.cpp \
+    dialog.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
     uartthread.h \
-    graphthread.h
+    graphthread.h \
+    dialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    dialog.ui
 
 
