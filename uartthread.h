@@ -44,8 +44,12 @@ private:
 
 private slots:
     void UART_RX_Handler();
+
 public slots:
     void CommandProc();
+
+signals:
+    void SendchangeShow(unsigned short ctrl);
 
 };
 

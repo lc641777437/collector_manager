@@ -5,6 +5,8 @@
 #include <QTextStream>
 #include <string.h>
 
+#include <QInputDialog>
+
 
 extern QByteArray ReadData;
 extern QVector<double> time;
@@ -70,7 +72,6 @@ void UartThread::usart_proc(QByteArray ReadBuf)
             {
                 isChannal[j * 8 + i] = 1;
             }
-
         }
     }
 
@@ -80,8 +81,8 @@ void UartThread::usart_proc(QByteArray ReadBuf)
         data1 = data1<<16;
         data2 = ReadBuf[i * 3 + 4 + 1];
         data2 = data2<<8;
-
         data3 = ReadBuf[i * 3 + 4 + 2];
+
         data[i] = (data1&0x00ff0000)|(data2&0x0000ff00)|(data3&0x000000ff);
 
         if(data[i]&0x00800000)
@@ -126,9 +127,8 @@ void UartThread::UART_RX_Handler()
 {
     if(!isSTART)
     {
-        int i = 0;
         CommandData.append(my_serialport->readAll());
-        qDebug()<<CommandData;
+        //qDebug()<<CommandData;
         while(1)
         {
             if(CommandData.length() <= 2)break;
@@ -163,6 +163,43 @@ void UartThread::UART_RX_Handler()
                 {
                     QMessageBox::information(pMainWindow, tr("采集分析软件"), tr("设备恢复出厂设置成功!\n"));
                 }
+                if(CommandData[2] == 0X17)
+                {
+                    if(CommandData.length() < 4)break;
+                    bool isOK;
+                    QStringList list;
+                    char str[5] = {0};
+                    snprintf(str,5,"%d",CommandData[3]&0xff);
+                    list<<tr(str)<<tr("200")<<tr("100")<<tr("50")<<tr("20")<<tr("10")<<tr("5")<<tr("2")<<tr("1");
+                    QString SampleRate=QInputDialog::getItem(pMainWindow,tr("设置采样频率"),tr("请选择采样频率:"),list,0,false,&isOK);
+                    if(isOK)
+                    {
+                        if(my_serialport->baudRate() == QSerialPort::Baud38400 && SampleRate.toInt() >= 20)
+                        {
+                            QMessageBox::information(pMainWindow, tr("采集分析软件"), tr("无线串口仅支持 20 以下的采样率!\n"));
+                        }
+                        else
+                        {
+                            my_serialport->write("SampleRate:"+SampleRate.toLatin1()+"\r\n");
+                            timer->start(2000);
+                            samplerate = SampleRate.toInt();
+                        }
+                    }
+                }
+                if(CommandData[2] == 0X18)
+                {
+                    unsigned short ctrl = 0;
+                    int data1,data2;
+                    if(CommandData.length()<5)break;
+                    data1 = CommandData[3]&0xff;
+                    data2 = CommandData[4]&0xff;
+                    ctrl |= data1;
+                    ctrl <<= 8;
+                    ctrl |= data2;
+                    emit SendchangeShow(ctrl);
+                    pMainWindow->setCTRL->setModal(true);
+                    pMainWindow->setCTRL->show();
+                }
                 CommandData.clear();
                 break;
             }
@@ -176,10 +213,19 @@ void UartThread::UART_RX_Handler()
     {
         int i = 0;
         ReadData.append(my_serialport->readAll());
+        /*static int count;
+        qDebug()<<count++<<ReadData;*/
         while(1)//remove the nothing header
         {
-            if(i >= ReadData.length()){i=0;break;}
-            if(ReadData[i] == 0XA5 && ReadData[i+1] == 0XA5)break;
+            if(i >= ReadData.length())
+            {
+                i=0;
+                break;
+            }
+            if(ReadData[i] == 0XA5 && ReadData[i+1] == 0XA5)
+            {
+                break;
+            }
             i++;
         }
         if(i != 0)
@@ -189,6 +235,7 @@ void UartThread::UART_RX_Handler()
 
         while(1)//proc
         {
+
             if(ReadData.length() < 54)break;
             if(ReadData[0] == 0XA5 && ReadData[1] == 0XA5)
             {

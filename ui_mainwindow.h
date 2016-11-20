@@ -463,7 +463,7 @@ public:
         pushButton_wireless->setText(QApplication::translate("MainWindow", "\346\227\240\347\272\277\344\270\262\345\217\243", 0));
         pushButton_OpenSerial->setText(QApplication::translate("MainWindow", "\346\234\211\347\272\277\344\270\262\345\217\243", 0));
         check_newLine->setText(QApplication::translate("MainWindow", "\345\217\221\351\200\201\346\226\260\350\241\214", 0));
-        pushButton_Reset->setText(QApplication::translate("MainWindow", "\351\207\215\346\226\260\351\207\207\351\233\206", 0));
+        pushButton_Reset->setText(QApplication::translate("MainWindow", "\346\225\260\346\215\256\344\277\235\345\255\230", 0));
         pushButton_StartCollect->setText(QApplication::translate("MainWindow", "\345\274\200\345\247\213\351\207\207\351\233\206", 0));
         checkBox_1->setText(QApplication::translate("MainWindow", "1", 0));
         checkBox_3->setText(QApplication::translate("MainWindow", "3", 0));

@@ -5,6 +5,7 @@
 #include <Qfile>
 #include <Qdebug>
 #include <Qtime>
+#include <QMenu>
 #include <QMessageBox>
 #include <QTextStream>
 
@@ -26,6 +27,14 @@ TextTread::TextTread(QString message, QObject *parent) :
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(ShowWave()), Qt::DirectConnection);
     timer->start(1000);
+    pMainWindow->ui->widget->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(pMainWindow->ui->widget, SIGNAL(customContextMenuRequested(QPoint)), pMainWindow, SLOT(PresscontextMenuRequest_1(QPoint)));
+    pMainWindow->ui->widget_2->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(pMainWindow->ui->widget_2, SIGNAL(customContextMenuRequested(QPoint)), pMainWindow, SLOT(PresscontextMenuRequest_2(QPoint)));
+    pMainWindow->ui->widget_3->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(pMainWindow->ui->widget_3, SIGNAL(customContextMenuRequested(QPoint)), pMainWindow, SLOT(PresscontextMenuRequest_3(QPoint)));
+    pMainWindow->ui->widget_4->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(pMainWindow->ui->widget_4, SIGNAL(customContextMenuRequested(QPoint)), pMainWindow, SLOT(PresscontextMenuRequest_4(QPoint)));
 
 }
 
@@ -233,5 +242,9 @@ void TextTread::graph_Initial()
     pMainWindow->ui->widget_4->yAxis->setRange(0, 5);
     pMainWindow->ui->widget_4->legend->setVisible(false);// show legend:
 
+    pMainWindow->ui->widget->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+    pMainWindow->ui->widget_2->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+    pMainWindow->ui->widget_3->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+    pMainWindow->ui->widget_4->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 
 }

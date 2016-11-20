@@ -7,6 +7,8 @@ namespace Ui {
 class Dialog;
 }
 
+class MainWindow;
+
 class Dialog : public QDialog
 {
     Q_OBJECT
@@ -14,12 +16,13 @@ class Dialog : public QDialog
 public:
     explicit Dialog(QWidget *parent = 0);
     ~Dialog();
-
+    MainWindow  *pMainWindow;
 private:
     Ui::Dialog *ui;
 
 public slots:
     virtual void accept();
+    void changeShow(unsigned short ctrl);
 
 
 signals:

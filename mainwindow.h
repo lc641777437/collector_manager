@@ -7,6 +7,7 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <QThread>
+#include <QPoint>
 
 
 #include "uartthread.h"
@@ -60,6 +61,19 @@ private slots:
 
 public slots:
     void GetCTRL(int ctrl);
+
+    void PresscontextMenuRequest_1(QPoint pos);
+    void PressSaveGraph_1();
+
+    void PresscontextMenuRequest_2(QPoint pos);
+    void PressSaveGraph_2();
+
+    void PresscontextMenuRequest_3(QPoint pos);
+    void PressSaveGraph_3();
+
+    void PresscontextMenuRequest_4(QPoint pos);
+    void PressSaveGraph_4();
+
 };
 
 

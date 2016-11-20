@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(uart_thread->my_serialport,SIGNAL(readyRead()),uart_thread,SLOT(UART_RX_Handler()));
 
     connect(setCTRL, SIGNAL(SendCTRL(int )), this, SLOT(GetCTRL(int )));
+    connect(uart_thread, SIGNAL(SendchangeShow(unsigned short)), setCTRL, SLOT(changeShow(unsigned short)));
 
     connect(ui->checkBox_1, SIGNAL(clicked()), this, SLOT(on_checkBox_clicked()));
     connect(ui->checkBox_2, SIGNAL(clicked()), this, SLOT(on_checkBox_clicked()));
@@ -85,7 +86,7 @@ void MainWindow::on_pushButton_OpenSerial_clicked()
 
         uart_thread->my_serialport->setPortName(ui->Port->currentText());
         uart_thread->my_serialport->open(QIODevice::ReadWrite);
-        uart_thread->my_serialport->setBaudRate(QSerialPort::Baud115200,QSerialPort::AllDirections);
+        uart_thread->my_serialport->setBaudRate(256000,QSerialPort::AllDirections);
         uart_thread->my_serialport->setDataBits(QSerialPort::Data8);
         uart_thread->my_serialport->setParity(QSerialPort::NoParity);
         uart_thread->my_serialport->setStopBits(QSerialPort::OneStop);
@@ -193,7 +194,7 @@ void MainWindow::initSeialPort()
 void MainWindow::on_pushButton_SetDeviceID_clicked()
 {
     bool isOK;
-    QString text = QInputDialog::getText(NULL,"Set Device ID","Pleace Enter one ID", QLineEdit::Normal,NULL,&isOK);
+    QString text = QInputDialog::getText(NULL,"设置设备ID","请输入一个设备ID:", QLineEdit::Normal,NULL,&isOK);
     if(text.isEmpty() || !uart_state)return;
 
     uart_thread->my_serialport->write("SetDeviceID:" + text.toLatin1() + "\r\n");
@@ -221,22 +222,8 @@ void MainWindow::on_pushButton_GetCOM_clicked()
 void MainWindow::on_pushButton_setSampleRate_clicked()
 {
     if(!uart_state)return;
-
-    bool isOK;
-    QStringList list;
-
-    list<<tr("200")<<tr("100")<<tr("50")<<tr("20")<<tr("10")<<tr("5")<<tr("2")<<tr("1");
-    QString SampleRate=QInputDialog::getItem(this,tr("SampleRate"),tr("Please select SampleRate"),list,0,false,&isOK);
-    if(!isOK)return;
-    if(uart_thread->my_serialport->baudRate() == QSerialPort::Baud38400 && SampleRate.toInt() >= 20)
-    {
-        QMessageBox::information(this, tr("采集分析软件"), tr("无线串口支持采样率：20以下！\n"));
-        return;
-    }
-    uart_thread->my_serialport->write("SampleRate:"+SampleRate.toLatin1()+"\r\n");
+    uart_thread->my_serialport->write("GetSampleRate\r\n");
     uart_thread->timer->start(2000);
-    qDebug()<<"uart send:"<<"SampleRate:"+SampleRate.toLatin1();
-    samplerate = SampleRate.toInt();
 }
 
 void MainWindow::on_pushButton_StartCollect_clicked()
@@ -253,7 +240,7 @@ void MainWindow::on_pushButton_StartCollect_clicked()
         ui->pushButton_setServerIP->setEnabled(false);
         ui->pushButton_Reset_2->setEnabled(false);
 
-        file.open( QIODevice::Append | QIODevice::Text);
+        file.open( QIODevice::ReadWrite | QIODevice::Text);
         uart_thread->my_serialport->write("StartToSend\r\n");
         qDebug()<<"uart send:"<<"StartToSend\r\n";
         isSTART = true;
@@ -315,6 +302,13 @@ void MainWindow::on_pushButton_Reset_clicked()
 {
     if(!uart_state)return;
 
+    QString fileName = QFileDialog::getSaveFileName (this, tr("保存数据"),"",tr("日志文件 (*.csv)"));
+    if(!fileName.isEmpty ())
+    {
+          file.copy("./default.csv",fileName);
+          QFile::remove("./default.csv");
+    }
+
     ui->pushButton_OpenSerial->setEnabled(true);
     ui->pushButton_Reset->setEnabled(false);
     isSTART = false;
@@ -329,16 +323,15 @@ void MainWindow::on_pushButton_Reset_clicked()
 void MainWindow::on_pushButton_setCTRL_clicked()
 {
     if(!uart_state)return;
-
-    setCTRL->setModal(true);
-    setCTRL->show();
+    uart_thread->my_serialport->write("GetCtrlState\r\n");
+    uart_thread->timer->start(2000);
 }
 
 void MainWindow::on_pushButton_setServerIP_clicked()
 {
     if(!uart_state)return;
     bool isOK;
-    QString text = QInputDialog::getText(NULL,"Set SERVER IP","Pleace Enter SERVER IP", QLineEdit::Normal,NULL,&isOK);
+    QString text = QInputDialog::getText(NULL,"设置服务器","请输入服务器地址:", QLineEdit::Normal,NULL,&isOK);
     if(text.isEmpty() ||!isOK)return;
     uart_thread->my_serialport->write("SetRemoteIP:" + text.toLatin1() + "\r\n");
     uart_thread->timer->start(2000);
@@ -509,7 +502,6 @@ void MainWindow::GetCTRL(int ctrl)
     char ctrl_str[5] = {0};
     sprintf(ctrl_str, "%x", ctrl);
     msg.append(ctrl_str);
-    qDebug()<<"uart send:"<<msg;
     uart_thread->my_serialport->write(msg.toLatin1()+"\r\n");
     uart_thread->timer->start(2000);
 }
@@ -525,5 +517,61 @@ void MainWindow::on_pushButton_Reset_2_clicked()
         uart_thread->my_serialport->write("ResetOption\r\n");
         uart_thread->timer->start(2000);
     }
-    qDebug()<<"uart send:"<<"ResetOption";
+}
+
+void MainWindow::PresscontextMenuRequest_1(QPoint pos)
+{
+    QMenu *menu = new QMenu(this);
+    menu->setAttribute(Qt::WA_DeleteOnClose);
+    if (ui->widget->legend->selectTest(pos, false) < 0){
+        menu->addAction("保存图像", this, SLOT(PressSaveGraph_1()));
+    }
+    menu->popup(ui->widget->mapToGlobal(pos));
+}
+void MainWindow::PressSaveGraph_1()
+{
+    QString fileName = QFileDialog::getSaveFileName (this,tr("保存图像"),"",tr("图像 (*.png)"));
+    ui->widget->savePng(fileName,ui->widget->width(),ui->widget->height());
+}
+void MainWindow::PresscontextMenuRequest_2(QPoint pos)
+{
+    QMenu *menu = new QMenu(this);
+    menu->setAttribute(Qt::WA_DeleteOnClose);
+    if (ui->widget_2->legend->selectTest(pos, false) < 0){
+        menu->addAction("保存图像", this, SLOT(PressSaveGraph_2()));
+    }
+    menu->popup(ui->widget_2->mapToGlobal(pos));
+}
+void MainWindow::PressSaveGraph_2()
+{
+    QString fileName = QFileDialog::getSaveFileName (this,tr("保存图像"),"",tr("图像 (*.png)"));
+    ui->widget_2->savePng(fileName,ui->widget_2->width(),ui->widget_2->height());
+}
+void MainWindow::PresscontextMenuRequest_3(QPoint pos)
+{
+    QMenu *menu = new QMenu(this);
+    menu->setAttribute(Qt::WA_DeleteOnClose);
+    if (ui->widget_3->legend->selectTest(pos, false) < 0){
+        menu->addAction("保存图像", this, SLOT(PressSaveGraph_3()));
+    }
+    menu->popup(ui->widget_3->mapToGlobal(pos));
+}
+void MainWindow::PressSaveGraph_3()
+{
+    QString fileName = QFileDialog::getSaveFileName (this,tr("保存图像"),"",tr("图像 (*.png)"));
+    ui->widget_3->savePng(fileName,ui->widget_3->width(),ui->widget_3->height());
+}
+void MainWindow::PresscontextMenuRequest_4(QPoint pos)
+{
+    QMenu *menu = new QMenu(this);
+    menu->setAttribute(Qt::WA_DeleteOnClose);
+    if (ui->widget_4->legend->selectTest(pos, false) < 0){
+        menu->addAction("保存图像", this, SLOT(PressSaveGraph_4()));
+    }
+    menu->popup(ui->widget_4->mapToGlobal(pos));
+}
+void MainWindow::PressSaveGraph_4()
+{
+    QString fileName = QFileDialog::getSaveFileName (this,tr("保存图像"),"",tr("图像 (*.png)"));
+    ui->widget_4->savePng(fileName,ui->widget_4->width(),ui->widget_4->height());
 }
