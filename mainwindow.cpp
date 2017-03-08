@@ -86,7 +86,7 @@ void MainWindow::on_pushButton_OpenSerial_clicked()
 
         uart_thread->my_serialport->setPortName(ui->Port->currentText());
         uart_thread->my_serialport->open(QIODevice::ReadWrite);
-        uart_thread->my_serialport->setBaudRate(256000,QSerialPort::AllDirections);
+        uart_thread->my_serialport->setBaudRate(QSerialPort::Baud115200,QSerialPort::AllDirections);
         uart_thread->my_serialport->setDataBits(QSerialPort::Data8);
         uart_thread->my_serialport->setParity(QSerialPort::NoParity);
         uart_thread->my_serialport->setStopBits(QSerialPort::OneStop);

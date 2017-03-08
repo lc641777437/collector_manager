@@ -618,8 +618,8 @@ debug/moc_mainwindow.cpp: qcustomplot.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort/qserialportinfo.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QThread \
 		uartthread.h \
-		graphthread.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QTimer \
+		graphthread.h \
 		dialog.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/QDialog \
 		mainwindow.h
@@ -1178,6 +1178,9 @@ debug/moc_uartthread.cpp: D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QThread \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort/qserialportglobal.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort/QSerialPortInfo \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort/qserialportinfo.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QTimer \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/qtimer.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/qbasictimer.h \
 		uartthread.h
 	D:\Qt\Qt5.5.1\5.5\mingw492_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -ID:/Qt/Qt5.5.1/5.5/mingw492_32/mkspecs/win32-g++ -IF:/Qt_program/collector -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtPrintSupport -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtANGLE -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore uartthread.h -o debug\moc_uartthread.cpp
 
@@ -2349,8 +2352,8 @@ debug/main.o: main.cpp mainwindow.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort/qserialportinfo.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QThread \
 		uartthread.h \
-		graphthread.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QTimer \
+		graphthread.h \
 		dialog.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/QDialog \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/QApplication
@@ -2843,8 +2846,8 @@ debug/mainwindow.o: mainwindow.cpp mainwindow.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort/qserialportinfo.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QThread \
 		uartthread.h \
-		graphthread.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QTimer \
+		graphthread.h \
 		dialog.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/QDialog \
 		ui_mainwindow.h \
@@ -3835,8 +3838,8 @@ debug/uratthread.o: uratthread.cpp mainwindow.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort/qserialportinfo.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QThread \
 		uartthread.h \
-		graphthread.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QTimer \
+		graphthread.h \
 		dialog.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/QDialog \
 		ui_mainwindow.h \
@@ -4343,8 +4346,8 @@ debug/graphthread.o: graphthread.cpp mainwindow.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort/qserialportinfo.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QThread \
 		uartthread.h \
-		graphthread.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QTimer \
+		graphthread.h \
 		dialog.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/QDialog \
 		ui_mainwindow.h \
@@ -4472,7 +4475,45 @@ debug/dialog.o: dialog.cpp dialog.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/qfiledevice.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui/qvector2d.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui/qtouchdevice.h \
-		ui_dialog.h
+		ui_dialog.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QVariant \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/QAction \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qaction.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui/qicon.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qactiongroup.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/QApplication \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qapplication.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/qcoreapplication.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/qeventloop.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qdesktopwidget.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui/qguiapplication.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui/qinputmethod.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/QButtonGroup \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qbuttongroup.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/QComboBox \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qcombobox.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qabstractitemdelegate.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qstyleoption.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qabstractspinbox.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui/qvalidator.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/qregularexpression.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qslider.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qabstractslider.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qstyle.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qtabbar.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qtabwidget.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qrubberband.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qframe.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/qabstractitemmodel.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/QDialogButtonBox \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qdialogbuttonbox.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/QHeaderView \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qheaderview.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qabstractitemview.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qabstractscrollarea.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/qitemselectionmodel.h \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/QLabel \
+		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qlabel.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\dialog.o dialog.cpp
 
 debug/moc_mainwindow.o: debug/moc_mainwindow.cpp 
