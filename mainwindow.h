@@ -58,6 +58,10 @@ private slots:
 
     void on_pushButton_SetParam_clicked();
 
+    void on_pushButton_SetServer_clicked();
+
+    void on_pushButton_clicked();
+
 public slots:
 
     void PresscontextMenuRequest_1(QPoint pos);

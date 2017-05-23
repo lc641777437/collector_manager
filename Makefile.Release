@@ -624,7 +624,7 @@ release/moc_mainwindow.cpp: qcustomplot.h \
 		dialog.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/QDialog \
 		mainwindow.h
-	D:\Qt\Qt5.5.1\5.5\mingw492_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -ID:/Qt/Qt5.5.1/5.5/mingw492_32/mkspecs/win32-g++ -IF:/Qt_program/collector -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtPrintSupport -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtANGLE -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore mainwindow.h -o release\moc_mainwindow.cpp
+	D:\Qt\Qt5.5.1\5.5\mingw492_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -ID:/Qt/Qt5.5.1/5.5/mingw492_32/mkspecs/win32-g++ -IF:/xunce/collector/manager_git -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtPrintSupport -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtANGLE -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore mainwindow.h -o release\moc_mainwindow.cpp
 
 release/moc_qcustomplot.cpp: D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QObject \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/qobject.h \
@@ -1104,7 +1104,7 @@ release/moc_qcustomplot.cpp: D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QObjec
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtPrintSupport/qprintpreviewwidget.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtPrintSupport/qtprintsupportversion.h \
 		qcustomplot.h
-	D:\Qt\Qt5.5.1\5.5\mingw492_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -ID:/Qt/Qt5.5.1/5.5/mingw492_32/mkspecs/win32-g++ -IF:/Qt_program/collector -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtPrintSupport -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtANGLE -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore qcustomplot.h -o release\moc_qcustomplot.cpp
+	D:\Qt\Qt5.5.1\5.5\mingw492_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -ID:/Qt/Qt5.5.1/5.5/mingw492_32/mkspecs/win32-g++ -IF:/xunce/collector/manager_git -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtPrintSupport -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtANGLE -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore qcustomplot.h -o release\moc_qcustomplot.cpp
 
 release/moc_uartthread.cpp: D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QThread \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/qthread.h \
@@ -1183,7 +1183,7 @@ release/moc_uartthread.cpp: D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QThread
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/qtimer.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/qbasictimer.h \
 		uartthread.h
-	D:\Qt\Qt5.5.1\5.5\mingw492_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -ID:/Qt/Qt5.5.1/5.5/mingw492_32/mkspecs/win32-g++ -IF:/Qt_program/collector -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtPrintSupport -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtANGLE -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore uartthread.h -o release\moc_uartthread.cpp
+	D:\Qt\Qt5.5.1\5.5\mingw492_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -ID:/Qt/Qt5.5.1/5.5/mingw492_32/mkspecs/win32-g++ -IF:/xunce/collector/manager_git -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtPrintSupport -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtANGLE -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore uartthread.h -o release\moc_uartthread.cpp
 
 release/moc_graphthread.cpp: D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QThread \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/qthread.h \
@@ -1257,7 +1257,7 @@ release/moc_graphthread.cpp: D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/QThrea
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/qtimer.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore/qbasictimer.h \
 		graphthread.h
-	D:\Qt\Qt5.5.1\5.5\mingw492_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -ID:/Qt/Qt5.5.1/5.5/mingw492_32/mkspecs/win32-g++ -IF:/Qt_program/collector -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtPrintSupport -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtANGLE -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore graphthread.h -o release\moc_graphthread.cpp
+	D:\Qt\Qt5.5.1\5.5\mingw492_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -ID:/Qt/Qt5.5.1/5.5/mingw492_32/mkspecs/win32-g++ -IF:/xunce/collector/manager_git -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtPrintSupport -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtANGLE -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore graphthread.h -o release\moc_graphthread.cpp
 
 release/moc_dialog.cpp: D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/QDialog \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/qdialog.h \
@@ -1363,7 +1363,7 @@ release/moc_dialog.cpp: D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets/QDialog 
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui/qvector2d.h \
 		D:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui/qtouchdevice.h \
 		dialog.h
-	D:\Qt\Qt5.5.1\5.5\mingw492_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -ID:/Qt/Qt5.5.1/5.5/mingw492_32/mkspecs/win32-g++ -IF:/Qt_program/collector -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtPrintSupport -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtANGLE -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore dialog.h -o release\moc_dialog.cpp
+	D:\Qt\Qt5.5.1\5.5\mingw492_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -ID:/Qt/Qt5.5.1/5.5/mingw492_32/mkspecs/win32-g++ -IF:/xunce/collector/manager_git -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtPrintSupport -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtWidgets -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtGui -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtANGLE -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtSerialPort -ID:/Qt/Qt5.5.1/5.5/mingw492_32/include/QtCore dialog.h -o release\moc_dialog.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:

@@ -183,9 +183,8 @@ void Dialog::accept()
     if(ui->comboBox_SampleRte->currentText().toInt() > 20 &&
             pMainWindow->uart_thread->my_serialport->baudRate() == QSerialPort::Baud38400)
     {
-        ui->label__Message->setText("无线采集只允许采样频率在20以下");
-        ui->label__Message->setStyleSheet("color:red;");
-        return;
+        QMessageBox::information(pMainWindow, tr("采集分析软件"),
+                tr("采样频率20以上,本地无线采集将失效!\n要支持更高的频率，请用有线串口进行采集！"));
     }
     this->pFre = ui->comboBox_SampleRte->currentText().toInt();
     this->pSendTimeServer = ui->comboBox_SendTime2erver->currentText().toInt();

@@ -150,7 +150,7 @@ void MainWindow::on_pushButton_wireless_clicked()
 
          uart_thread->my_serialport->close();
 
-         ui->Port->setEditable(true);
+         //ui->Port->pushButton_SetServer->setEditable(true);
          ui->pushButton_OpenSerial->setEnabled(true);
 
          ui->pushButton_StartCollect->setEnabled(false);
@@ -282,6 +282,28 @@ void MainWindow::on_pushButton_SetParam_clicked()
     uart_thread->timer->start(2000);
 }
 
+void MainWindow::on_pushButton_Reset_2_clicked()
+{
+    if(!uart_state)return;
+    QStringList list;
+    bool isOK;
+    list<<tr("恢复出厂设置")<<tr("点错了");
+    QString select=QInputDialog::getItem(this,tr("采集分析软件"),tr("点击确定"),list,0,false,&isOK);
+    if(select == "恢复出厂设置" && isOK)
+    {
+        uart_thread->my_serialport->write("ResetOption\r\n");
+        uart_thread->timer->start(2000);
+    }
+}
+
+void MainWindow::on_pushButton_SetServer_clicked()
+{
+    if(!uart_state)return;
+
+    QString server = QInputDialog::getText(this,tr("采集分析软件"),tr("asdasd"));
+    qDebug()<<server;
+
+}
 
 void MainWindow::on_checkBox_clicked()
 {
@@ -441,19 +463,6 @@ void MainWindow::on_checkBox_clicked()
     }
 }
 
-void MainWindow::on_pushButton_Reset_2_clicked()
-{
-    QStringList list;
-    bool isOK;
-    list<<tr("恢复出厂设置")<<tr("点错了");
-    QString select=QInputDialog::getItem(this,tr("采集分析软件"),tr("点击确定"),list,0,false,&isOK);
-    if(select == "恢复出厂设置" && isOK)
-    {
-        uart_thread->my_serialport->write("ResetOption\r\n");
-        uart_thread->timer->start(2000);
-    }
-}
-
 void MainWindow::PresscontextMenuRequest_1(QPoint pos)
 {
     QMenu *menu = new QMenu(this);
@@ -511,3 +520,7 @@ void MainWindow::PressSaveGraph_4()
     ui->widget_4->savePng(fileName,ui->widget_4->width(),ui->widget_4->height());
 }
 
+void MainWindow::on_pushButton_clicked()
+{
+
+}

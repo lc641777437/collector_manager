@@ -41,6 +41,7 @@ public:
     QCustomPlot *widget_4;
     QVBoxLayout *verticalLayout_5;
     QPushButton *pushButton_SetParam;
+    QPushButton *pushButton;
     QPushButton *pushButton_Reset_2;
     QSpacerItem *verticalSpacer;
     QPushButton *pushButton_Send;
@@ -145,6 +146,11 @@ public:
         pushButton_SetParam->setEnabled(false);
 
         verticalLayout_5->addWidget(pushButton_SetParam);
+
+        pushButton = new QPushButton(centralWidget);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+
+        verticalLayout_5->addWidget(pushButton);
 
         pushButton_Reset_2 = new QPushButton(centralWidget);
         pushButton_Reset_2->setObjectName(QStringLiteral("pushButton_Reset_2"));
@@ -427,6 +433,7 @@ public:
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
         pushButton_SetParam->setText(QApplication::translate("MainWindow", "\350\256\276\347\275\256\345\217\202\346\225\260", 0));
+        pushButton->setText(QApplication::translate("MainWindow", "PushButton", 0));
         pushButton_Reset_2->setText(QApplication::translate("MainWindow", "\346\201\242\345\244\215\345\207\272\345\216\202\350\256\276\347\275\256", 0));
         pushButton_Send->setText(QApplication::translate("MainWindow", "\345\217\221\351\200\201", 0));
         label->setText(QApplication::translate("MainWindow", "COM", 0));
