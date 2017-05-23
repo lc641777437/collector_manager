@@ -40,10 +40,7 @@ public:
     QCustomPlot *widget_3;
     QCustomPlot *widget_4;
     QVBoxLayout *verticalLayout_5;
-    QPushButton *pushButton_setSampleRate;
-    QPushButton *pushButton_SetDeviceID;
-    QPushButton *pushButton_setCTRL;
-    QPushButton *pushButton_setServerIP;
+    QPushButton *pushButton_SetParam;
     QPushButton *pushButton_Reset_2;
     QSpacerItem *verticalSpacer;
     QPushButton *pushButton_Send;
@@ -143,42 +140,19 @@ public:
         verticalLayout_5 = new QVBoxLayout();
         verticalLayout_5->setSpacing(6);
         verticalLayout_5->setObjectName(QStringLiteral("verticalLayout_5"));
-        pushButton_setSampleRate = new QPushButton(centralWidget);
-        pushButton_setSampleRate->setObjectName(QStringLiteral("pushButton_setSampleRate"));
-        pushButton_setSampleRate->setEnabled(false);
-        pushButton_setSampleRate->setMaximumSize(QSize(75, 20));
+        pushButton_SetParam = new QPushButton(centralWidget);
+        pushButton_SetParam->setObjectName(QStringLiteral("pushButton_SetParam"));
+        pushButton_SetParam->setEnabled(false);
 
-        verticalLayout_5->addWidget(pushButton_setSampleRate);
-
-        pushButton_SetDeviceID = new QPushButton(centralWidget);
-        pushButton_SetDeviceID->setObjectName(QStringLiteral("pushButton_SetDeviceID"));
-        pushButton_SetDeviceID->setEnabled(false);
-        pushButton_SetDeviceID->setMaximumSize(QSize(75, 20));
-
-        verticalLayout_5->addWidget(pushButton_SetDeviceID);
-
-        pushButton_setCTRL = new QPushButton(centralWidget);
-        pushButton_setCTRL->setObjectName(QStringLiteral("pushButton_setCTRL"));
-        pushButton_setCTRL->setEnabled(false);
-        pushButton_setCTRL->setMaximumSize(QSize(75, 20));
-        QFont font;
-        font.setFamily(QStringLiteral("Agency FB"));
-        font.setPointSize(8);
-        pushButton_setCTRL->setFont(font);
-
-        verticalLayout_5->addWidget(pushButton_setCTRL);
-
-        pushButton_setServerIP = new QPushButton(centralWidget);
-        pushButton_setServerIP->setObjectName(QStringLiteral("pushButton_setServerIP"));
-        pushButton_setServerIP->setEnabled(false);
-        pushButton_setServerIP->setMaximumSize(QSize(75, 20));
-
-        verticalLayout_5->addWidget(pushButton_setServerIP);
+        verticalLayout_5->addWidget(pushButton_SetParam);
 
         pushButton_Reset_2 = new QPushButton(centralWidget);
         pushButton_Reset_2->setObjectName(QStringLiteral("pushButton_Reset_2"));
         pushButton_Reset_2->setEnabled(false);
         pushButton_Reset_2->setMaximumSize(QSize(75, 20));
+        QFont font;
+        font.setFamily(QStringLiteral("Agency FB"));
+        font.setPointSize(8);
         pushButton_Reset_2->setFont(font);
 
         verticalLayout_5->addWidget(pushButton_Reset_2);
@@ -452,10 +426,7 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
-        pushButton_setSampleRate->setText(QApplication::translate("MainWindow", "\350\256\276\347\275\256\351\207\207\346\240\267\347\216\207", 0));
-        pushButton_SetDeviceID->setText(QApplication::translate("MainWindow", "\350\256\276\347\275\256\350\256\276\345\244\207\345\217\267", 0));
-        pushButton_setCTRL->setText(QApplication::translate("MainWindow", "\350\256\276\347\275\256\351\207\207\346\240\267\347\261\273\345\236\213", 0));
-        pushButton_setServerIP->setText(QApplication::translate("MainWindow", "\350\256\276\347\275\256\346\234\215\345\212\241\345\231\250", 0));
+        pushButton_SetParam->setText(QApplication::translate("MainWindow", "\350\256\276\347\275\256\345\217\202\346\225\260", 0));
         pushButton_Reset_2->setText(QApplication::translate("MainWindow", "\346\201\242\345\244\215\345\207\272\345\216\202\350\256\276\347\275\256", 0));
         pushButton_Send->setText(QApplication::translate("MainWindow", "\345\217\221\351\200\201", 0));
         label->setText(QApplication::translate("MainWindow", "COM", 0));

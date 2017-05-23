@@ -14,16 +14,25 @@ class Dialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit Dialog(QWidget *parent = 0);
+    explicit Dialog(QWidget *parent, unsigned char devIDH, unsigned char devIDL, unsigned char ctrlH, unsigned char ctrlL,\
+                    unsigned char fre, unsigned char sendTimeServer, unsigned char sendTimeDynamic);
     ~Dialog();
     MainWindow  *pMainWindow;
+    bool isReject;
+    unsigned char pDevIDH;
+    unsigned char pDevIDL;
+    unsigned char pCtrlH;
+    unsigned char pCtrlL;
+    unsigned char pFre;
+    unsigned char pSendTimeServer;
+    unsigned char pSendTimeDynamic;
+
 private:
     Ui::Dialog *ui;
 
 public slots:
     virtual void accept();
-    void changeShow(unsigned short ctrl);
-
+    virtual void reject();
 
 signals:
     void SendCTRL(int ctrl);

@@ -32,6 +32,7 @@ public:
     Ui::MainWindow *ui;
     UartThread *uart_thread;
     Dialog *setCTRL;
+    bool isStart;
 
     void initSeialPort();
     void show_wave();
@@ -48,19 +49,16 @@ private:
 private slots:
     void on_pushButton_Send_clicked();
     void on_pushButton_GetCOM_clicked();
-    void on_pushButton_setSampleRate_clicked();
-    void on_pushButton_SetDeviceID_clicked();
     void on_pushButton_StartCollect_clicked();
     void on_pushButton_OpenSerial_clicked();
     void on_pushButton_Reset_clicked();
-    void on_pushButton_setCTRL_clicked();
-    void on_pushButton_setServerIP_clicked();
     void on_pushButton_Reset_2_clicked();
     void on_checkBox_clicked();
     void on_pushButton_wireless_clicked();
 
+    void on_pushButton_SetParam_clicked();
+
 public slots:
-    void GetCTRL(int ctrl);
 
     void PresscontextMenuRequest_1(QPoint pos);
     void PressSaveGraph_1();

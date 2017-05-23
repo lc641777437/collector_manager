@@ -16,7 +16,6 @@ QFile file("./default.csv");
 bool isChannal[16] = {0};
 int samplerate = 200;
 bool box[16] = {false};
-bool isSTART = false;
 
 extern unsigned int timeCount;
 
@@ -25,11 +24,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     this->setWindowTitle("采集分析软件");
 
-    setCTRL = new Dialog();
     initSeialPort();
+
+    this->isStart = false;
 
     uart_thread = new UartThread("uartthread", this);
     uart_thread->start();
@@ -38,9 +37,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     uart_thread->my_serialport= new QSerialPort;
     connect(uart_thread->my_serialport,SIGNAL(readyRead()),uart_thread,SLOT(UART_RX_Handler()));
-
-    connect(setCTRL, SIGNAL(SendCTRL(int )), this, SLOT(GetCTRL(int )));
-    connect(uart_thread, SIGNAL(SendchangeShow(unsigned short)), setCTRL, SLOT(changeShow(unsigned short)));
 
     connect(ui->checkBox_1, SIGNAL(clicked()), this, SLOT(on_checkBox_clicked()));
     connect(ui->checkBox_2, SIGNAL(clicked()), this, SLOT(on_checkBox_clicked()));
@@ -58,7 +54,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->checkBox_14, SIGNAL(clicked()), this, SLOT(on_checkBox_clicked()));
     connect(ui->checkBox_15, SIGNAL(clicked()), this, SLOT(on_checkBox_clicked()));
     connect(ui->checkBox_16, SIGNAL(clicked()), this, SLOT(on_checkBox_clicked()));
-
 }
 
 MainWindow::~MainWindow()
@@ -97,10 +92,8 @@ void MainWindow::on_pushButton_OpenSerial_clicked()
         ui->pushButton_wireless->setEnabled(false);
 
         ui->pushButton_StartCollect->setEnabled(true);
-        ui->pushButton_setSampleRate->setEnabled(true);
-        ui->pushButton_SetDeviceID->setEnabled(true);
-        ui->pushButton_setCTRL->setEnabled(true);
-        ui->pushButton_setServerIP->setEnabled(true);
+        ui->pushButton_SetParam->setEnabled(true);
+
         ui->pushButton_Reset_2->setEnabled(true);
     }
     else
@@ -113,10 +106,7 @@ void MainWindow::on_pushButton_OpenSerial_clicked()
 
         ui->Port->setEditable(true);
         ui->pushButton_StartCollect->setEnabled(false);
-        ui->pushButton_setSampleRate->setEnabled(false);
-        ui->pushButton_SetDeviceID->setEnabled(false);
-        ui->pushButton_setCTRL->setEnabled(false);
-        ui->pushButton_setServerIP->setEnabled(false);
+        ui->pushButton_SetParam->setEnabled(false);
         ui->pushButton_Reset_2->setEnabled(false);
 
 
@@ -150,10 +140,7 @@ void MainWindow::on_pushButton_wireless_clicked()
          ui->pushButton_OpenSerial->setEnabled(false);
 
          ui->pushButton_StartCollect->setEnabled(true);
-         ui->pushButton_setSampleRate->setEnabled(true);
-         ui->pushButton_SetDeviceID->setEnabled(true);
-         ui->pushButton_setCTRL->setEnabled(true);
-         ui->pushButton_setServerIP->setEnabled(true);
+         ui->pushButton_SetParam->setEnabled(true);
          ui->pushButton_Reset_2->setEnabled(true);
      }
      else
@@ -167,10 +154,7 @@ void MainWindow::on_pushButton_wireless_clicked()
          ui->pushButton_OpenSerial->setEnabled(true);
 
          ui->pushButton_StartCollect->setEnabled(false);
-         ui->pushButton_setSampleRate->setEnabled(false);
-         ui->pushButton_SetDeviceID->setEnabled(false);
-         ui->pushButton_setCTRL->setEnabled(false);
-         ui->pushButton_setServerIP->setEnabled(false);
+         ui->pushButton_SetParam->setEnabled(false);
          ui->pushButton_Reset_2->setEnabled(false);
      }
 
@@ -191,16 +175,6 @@ void MainWindow::initSeialPort()
         ui->Port->addItem(info.portName());
     }
 }
-void MainWindow::on_pushButton_SetDeviceID_clicked()
-{
-    bool isOK;
-    QString text = QInputDialog::getText(NULL,"设置设备ID","请输入一个设备ID:", QLineEdit::Normal,NULL,&isOK);
-    if(text.isEmpty() || !uart_state)return;
-
-    uart_thread->my_serialport->write("SetDeviceID:" + text.toLatin1() + "\r\n");
-    uart_thread->timer->start(2000);
-    qDebug()<<"uart send:"<<"SetDeviceID:" + text.toLatin1();
-}
 
 void MainWindow::on_pushButton_Send_clicked()
 {
@@ -219,31 +193,18 @@ void MainWindow::on_pushButton_GetCOM_clicked()
     initSeialPort();
 }
 
-void MainWindow::on_pushButton_setSampleRate_clicked()
-{
-    if(!uart_state)return;
-    uart_thread->my_serialport->write("GetSampleRate\r\n");
-    uart_thread->timer->start(2000);
-}
-
 void MainWindow::on_pushButton_StartCollect_clicked()
 {
+    if(!uart_state)return;
     if(ui->pushButton_StartCollect->text() == "开始采集")
     {
-        if(!uart_state)return;
-
         ui->pushButton_OpenSerial->setEnabled(false);
 
-        ui->pushButton_setSampleRate->setEnabled(false);
-        ui->pushButton_SetDeviceID->setEnabled(false);
-        ui->pushButton_setCTRL->setEnabled(false);
-        ui->pushButton_setServerIP->setEnabled(false);
+        ui->pushButton_SetParam->setEnabled(false);
         ui->pushButton_Reset_2->setEnabled(false);
 
         file.open( QIODevice::ReadWrite | QIODevice::Text);
         uart_thread->my_serialport->write("StartToSend\r\n");
-        qDebug()<<"uart send:"<<"StartToSend\r\n";
-        isSTART = true;
         ui->pushButton_StartCollect->setText("结束采集");
     }
     else if(ui->pushButton_StartCollect->text() == "结束采集")
@@ -260,10 +221,7 @@ void MainWindow::on_pushButton_StartCollect_clicked()
         }
 
 
-        ui->pushButton_setSampleRate->setEnabled(true);
-        ui->pushButton_SetDeviceID->setEnabled(true);
-        ui->pushButton_setCTRL->setEnabled(true);
-        ui->pushButton_setServerIP->setEnabled(true);
+        ui->pushButton_SetParam->setEnabled(true);
         ui->pushButton_Reset_2->setEnabled(true);
 
 
@@ -271,7 +229,7 @@ void MainWindow::on_pushButton_StartCollect_clicked()
         uart_thread->my_serialport->write("StopToSend\r\n");
         uart_thread->timer->start(2000);
         qDebug()<<"uart send:"<<"StopToSend\r\n";
-        isSTART = false;
+        this->isStart = false;
         ui->pushButton_StartCollect->setText("继续采集");
     }
     else if(ui->pushButton_StartCollect->text() == "继续采集")
@@ -282,17 +240,13 @@ void MainWindow::on_pushButton_StartCollect_clicked()
         ui->pushButton_OpenSerial->setEnabled(false);
         ui->pushButton_wireless->setEnabled(false);
 
-        ui->pushButton_setSampleRate->setEnabled(false);
-        ui->pushButton_SetDeviceID->setEnabled(false);
-        ui->pushButton_setCTRL->setEnabled(false);
-        ui->pushButton_setServerIP->setEnabled(false);
+        ui->pushButton_SetParam->setEnabled(false);
         ui->pushButton_Reset_2->setEnabled(false);
 
 
         file.open( QIODevice::Append | QIODevice::Text);
         uart_thread->my_serialport->write("StartToSend\r\n");
         qDebug()<<"uart send:"<<"StartToSend\r\n";
-        isSTART = true;
         ui->pushButton_StartCollect->setText("结束采集");
     }
 }
@@ -311,7 +265,7 @@ void MainWindow::on_pushButton_Reset_clicked()
 
     ui->pushButton_OpenSerial->setEnabled(true);
     ui->pushButton_Reset->setEnabled(false);
-    isSTART = false;
+    isStart = false;
     time.clear();
     for(int i = 0;i<16;i++)
     {
@@ -320,28 +274,19 @@ void MainWindow::on_pushButton_Reset_clicked()
     timeCount = 0;
     ui->pushButton_StartCollect->setText("开始采集");
 }
-void MainWindow::on_pushButton_setCTRL_clicked()
+
+void MainWindow::on_pushButton_SetParam_clicked()
 {
     if(!uart_state)return;
-    uart_thread->my_serialport->write("GetCtrlState\r\n");
+    uart_thread->my_serialport->write("GetParam\r\n");
     uart_thread->timer->start(2000);
 }
 
-void MainWindow::on_pushButton_setServerIP_clicked()
-{
-    if(!uart_state)return;
-    bool isOK;
-    QString text = QInputDialog::getText(NULL,"设置服务器","请输入服务器地址:", QLineEdit::Normal,NULL,&isOK);
-    if(text.isEmpty() ||!isOK)return;
-    uart_thread->my_serialport->write("SetRemoteIP:" + text.toLatin1() + "\r\n");
-    uart_thread->timer->start(2000);
-    qDebug()<<"uart send:"<<"SetRemoteIP:"<<text.toLatin1();
-}
 
 void MainWindow::on_checkBox_clicked()
 {
-    bool tmp_box[16] = {false};
     int count = 0,i;
+    bool tmp_box[16] = {false};
 
     if(ui->checkBox_1->isChecked())
     {
@@ -496,16 +441,6 @@ void MainWindow::on_checkBox_clicked()
     }
 }
 
-void MainWindow::GetCTRL(int ctrl)
-{
-    QString msg("SetCtrlState:");
-    char ctrl_str[5] = {0};
-    sprintf(ctrl_str, "%x", ctrl);
-    msg.append(ctrl_str);
-    uart_thread->my_serialport->write(msg.toLatin1()+"\r\n");
-    uart_thread->timer->start(2000);
-}
-
 void MainWindow::on_pushButton_Reset_2_clicked()
 {
     QStringList list;
@@ -575,3 +510,4 @@ void MainWindow::PressSaveGraph_4()
     QString fileName = QFileDialog::getSaveFileName (this,tr("保存图像"),"",tr("图像 (*.png)"));
     ui->widget_4->savePng(fileName,ui->widget_4->width(),ui->widget_4->height());
 }
+

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "uartthread.h"
+#include "dialog.h"
 
 #include <QTextStream>
 #include <string.h>
@@ -125,80 +126,71 @@ void UartThread::usart_proc(QByteArray ReadBuf)
 
 void UartThread::UART_RX_Handler()
 {
-    if(!isSTART)
+    if(!pMainWindow->isStart)
     {
         CommandData.append(my_serialport->readAll());
-        //qDebug()<<CommandData;
+        qDebug()<<CommandData.toHex();
         while(1)
         {
             if(CommandData.length() <= 2)break;
             if(CommandData[0] == 0XA6 && CommandData[1] == 0XA6)
             {
                 timer->stop();
-                if(CommandData[2] == 0X10)
+
+                if(CommandData[2] == CMD_SET_PARAM)
                 {
-                    QMessageBox::information(pMainWindow, tr("采集分析软件"), tr("采样频率设置成功!\n"));
+                    if(CommandData.length() < 3){
+                        return;//length is not enough
+                    }
+                    QMessageBox::information(pMainWindow, tr("采集分析软件"), tr("设置参数成功!\n"));
                 }
-                if(CommandData[2] == 0X11)
+
+                if(CommandData[2] == CMD_GET_PARAM)
                 {
-                    QMessageBox::information(pMainWindow, tr("采集分析软件"), tr("设备ID设置成功!\n"));
-                }
-                if(CommandData[2] == 0X12)
-                {
-                    QMessageBox::information(pMainWindow, tr("采集分析软件"), tr("采样类型设置成功!\n"));
-                }
-                if(CommandData[2] == 0X13)
-                {
-                    QMessageBox::information(pMainWindow, tr("采集分析软件"), tr("服务器地址设置成功!\n"));
-                }
-                if(CommandData[2] == 0X14)
-                {
-                    QMessageBox::information(pMainWindow, tr("采集分析软件"), tr("已经开始采集!\n"));
-                }
-                if(CommandData[2] == 0X15)
-                {
-                    QMessageBox::information(pMainWindow, tr("采集分析软件"), tr("已经结束采集!\n"));
-                }
-                if(CommandData[2] == 0X16)
-                {
-                    QMessageBox::information(pMainWindow, tr("采集分析软件"), tr("设备恢复出厂设置成功!\n"));
-                }
-                if(CommandData[2] == 0X17)
-                {
-                    if(CommandData.length() < 4)break;
-                    bool isOK;
-                    QStringList list;
-                    char str[5] = {0};
-                    snprintf(str,5,"%d",CommandData[3]&0xff);
-                    list<<tr(str)<<tr("200")<<tr("100")<<tr("50")<<tr("20")<<tr("10")<<tr("5")<<tr("2")<<tr("1");
-                    QString SampleRate=QInputDialog::getItem(pMainWindow,tr("设置采样频率"),tr("请选择采样频率:"),list,0,false,&isOK);
-                    if(isOK)
+                    if(CommandData.length() < 10)
                     {
-                        if(my_serialport->baudRate() == QSerialPort::Baud38400 && SampleRate.toInt() >= 20)
-                        {
-                            QMessageBox::information(pMainWindow, tr("采集分析软件"), tr("无线串口仅支持 20 以下的采样率!\n"));
-                        }
-                        else
-                        {
-                            my_serialport->write("SampleRate:"+SampleRate.toLatin1()+"\r\n");
-                            timer->start(2000);
-                            samplerate = SampleRate.toInt();
-                        }
+                        return;//length is not enough
+                    }
+                    Dialog event(pMainWindow, CommandData[3], CommandData[4], CommandData[5], CommandData[6], CommandData[7], CommandData[8], CommandData[9]);
+                    int rc = event.exec();
+                    if(rc == 0)
+                    {
+                        QByteArray message;
+                        message.append(QString("SetParam"));
+                        message.append(event.pDevIDH);
+                        message.append(event.pDevIDL);
+                        message.append(event.pCtrlH);
+                        message.append(event.pCtrlL);
+                        message.append(event.pFre);
+                        message.append(event.pSendTimeServer);
+                        message.append(event.pSendTimeDynamic);
+                        message.append(QString("\r\n"));
+
+                        my_serialport->write(message);
+                        this->timer->start(2000);
                     }
                 }
-                if(CommandData[2] == 0X18)
+                if(CommandData[2] == CMD_SEND_START)
                 {
-                    unsigned short ctrl = 0;
-                    int data1,data2;
-                    if(CommandData.length()<5)break;
-                    data1 = CommandData[3]&0xff;
-                    data2 = CommandData[4]&0xff;
-                    ctrl |= data1;
-                    ctrl <<= 8;
-                    ctrl |= data2;
-                    emit SendchangeShow(ctrl);
-                    pMainWindow->setCTRL->setModal(true);
-                    pMainWindow->setCTRL->show();
+                    if(CommandData.length() < 3){
+                        return;//length is not enough
+                    }
+                    pMainWindow->isStart = true;
+                    QMessageBox::information(pMainWindow, tr("采集分析软件"), tr("已经开始采集!\n"));
+                }
+                if(CommandData[2] == CMD_SEND_STOP)
+                {
+                    if(CommandData.length() < 3){
+                        return;//length is not enough
+                    }
+                    QMessageBox::information(pMainWindow, tr("采集分析软件"), tr("已经结束采集!\n"));
+                }
+                if(CommandData[2] == CMD_SET_FACTORY)
+                {
+                    if(CommandData.length() < 3){
+                        return;//length is not enough
+                    }
+                    QMessageBox::information(pMainWindow, tr("采集分析软件"), tr("设备恢复出厂设置成功!\n"));
                 }
                 CommandData.clear();
                 break;
@@ -213,17 +205,14 @@ void UartThread::UART_RX_Handler()
     {
         int i = 0;
         ReadData.append(my_serialport->readAll());
-        /*static int count;
-        qDebug()<<count++<<ReadData;*/
+        qDebug()<<ReadData.toHex();
         while(1)//remove the nothing header
         {
-            if(i >= ReadData.length())
-            {
+            if(i >= ReadData.length()){
                 i=0;
                 break;
             }
-            if(ReadData[i] == 0XA5 && ReadData[i+1] == 0XA5)
-            {
+            if(ReadData[i] == 0XA5 && ReadData[i+1] == 0XA5){
                 break;
             }
             i++;
