@@ -192,6 +192,14 @@ void UartThread::UART_RX_Handler()
                     }
                     QMessageBox::information(pMainWindow, tr("采集分析软件"), tr("设备恢复出厂设置成功!\n"));
                 }
+                if(CommandData[2] == CMD_SET_SERVER)
+                {
+                    if(CommandData.length() < 3){
+                        return;//length is not enough
+                    }
+                    QMessageBox::information(pMainWindow, tr("采集分析软件"), tr("设置服务器成功!\n"));
+                }
+
                 CommandData.clear();
                 break;
             }

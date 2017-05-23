@@ -55,12 +55,8 @@ private slots:
     void on_pushButton_Reset_2_clicked();
     void on_checkBox_clicked();
     void on_pushButton_wireless_clicked();
-
     void on_pushButton_SetParam_clicked();
-
     void on_pushButton_SetServer_clicked();
-
-    void on_pushButton_clicked();
 
 public slots:
 

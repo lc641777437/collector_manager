@@ -95,6 +95,7 @@ void MainWindow::on_pushButton_OpenSerial_clicked()
         ui->pushButton_SetParam->setEnabled(true);
 
         ui->pushButton_Reset_2->setEnabled(true);
+        ui->pushButton_SetServer->setEnabled(true);
     }
     else
     {
@@ -108,8 +109,7 @@ void MainWindow::on_pushButton_OpenSerial_clicked()
         ui->pushButton_StartCollect->setEnabled(false);
         ui->pushButton_SetParam->setEnabled(false);
         ui->pushButton_Reset_2->setEnabled(false);
-
-
+        ui->pushButton_SetServer->setEnabled(false);
     }
 }
 
@@ -142,6 +142,7 @@ void MainWindow::on_pushButton_wireless_clicked()
          ui->pushButton_StartCollect->setEnabled(true);
          ui->pushButton_SetParam->setEnabled(true);
          ui->pushButton_Reset_2->setEnabled(true);
+         ui->pushButton_SetServer->setEnabled(true);
      }
      else
      {
@@ -156,6 +157,7 @@ void MainWindow::on_pushButton_wireless_clicked()
          ui->pushButton_StartCollect->setEnabled(false);
          ui->pushButton_SetParam->setEnabled(false);
          ui->pushButton_Reset_2->setEnabled(false);
+         ui->pushButton_SetServer->setEnabled(false);
      }
 
 
@@ -202,6 +204,7 @@ void MainWindow::on_pushButton_StartCollect_clicked()
 
         ui->pushButton_SetParam->setEnabled(false);
         ui->pushButton_Reset_2->setEnabled(false);
+        ui->pushButton_SetServer->setEnabled(false);
 
         file.open( QIODevice::ReadWrite | QIODevice::Text);
         uart_thread->my_serialport->write("StartToSend\r\n");
@@ -223,6 +226,7 @@ void MainWindow::on_pushButton_StartCollect_clicked()
 
         ui->pushButton_SetParam->setEnabled(true);
         ui->pushButton_Reset_2->setEnabled(true);
+        ui->pushButton_SetServer->setEnabled(true);
 
 
         file.close();
@@ -242,6 +246,7 @@ void MainWindow::on_pushButton_StartCollect_clicked()
 
         ui->pushButton_SetParam->setEnabled(false);
         ui->pushButton_Reset_2->setEnabled(false);
+        ui->pushButton_SetServer->setEnabled(false);
 
 
         file.open( QIODevice::Append | QIODevice::Text);
@@ -300,9 +305,15 @@ void MainWindow::on_pushButton_SetServer_clicked()
 {
     if(!uart_state)return;
 
-    QString server = QInputDialog::getText(this,tr("采集分析软件"),tr("asdasd"));
-    qDebug()<<server;
-
+    QString server = QInputDialog::getText(this,tr("采集分析软件"),tr("域名或IP地址:端口"));
+    if(server.length() != 0)
+    {
+        qDebug()<<QString("SetServer" + server + "\r\n");
+        QByteArray message;
+        message.append(QString("SetServer" + server + "\r\n"));
+        uart_thread->my_serialport->write(message);
+        uart_thread->timer->start(2000);
+    }
 }
 
 void MainWindow::on_checkBox_clicked()
@@ -518,9 +529,4 @@ void MainWindow::PressSaveGraph_4()
 {
     QString fileName = QFileDialog::getSaveFileName (this,tr("保存图像"),"",tr("图像 (*.png)"));
     ui->widget_4->savePng(fileName,ui->widget_4->width(),ui->widget_4->height());
-}
-
-void MainWindow::on_pushButton_clicked()
-{
-
 }

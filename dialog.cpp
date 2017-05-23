@@ -178,8 +178,8 @@ void Dialog::accept()
     if(ui->comboBox_16->currentText() == "电压"){
         tmp |= 1<<15;
     }
-    this->pCtrlH = (tmp>>8) && 0XFF;
-    this->pCtrlL = tmp && 0XFF;
+    this->pCtrlH = (tmp>>8) & 0XFF;
+    this->pCtrlL = tmp & 0XFF;
     if(ui->comboBox_SampleRte->currentText().toInt() > 20 &&
             pMainWindow->uart_thread->my_serialport->baudRate() == QSerialPort::Baud38400)
     {
