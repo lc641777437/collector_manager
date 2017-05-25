@@ -5,9 +5,11 @@ INPUT(
 ./debug\uratthread.o
 ./debug\graphthread.o
 ./debug\dialog.o
+./debug\tcpclientthread.o
 ./debug\moc_mainwindow.o
 ./debug\moc_qcustomplot.o
 ./debug\moc_uartthread.o
 ./debug\moc_graphthread.o
 ./debug\moc_dialog.o
+./debug\moc_tcpclientthread.o
 );

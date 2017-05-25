@@ -8,14 +8,13 @@
 #include <QTextStream>
 #include "qnamespace.h"
 
-QByteArray ReadData;
+
+
 QVector<double> time;
 QVector<double> value[16];
 QFile file("./default.csv");
 
-bool isChannal[16] = {0};
 int samplerate = 200;
-bool box[16] = {false};
 
 extern unsigned int timeCount;
 
@@ -25,18 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("采集分析软件");
-
-    initSeialPort();
-
-    this->isStart = false;
-
-    uart_thread = new UartThread("uartthread", this);
-    uart_thread->start();
-    text_thread = new TextTread("textthread", this);
-    text_thread->start();
-
-    uart_thread->my_serialport= new QSerialPort;
-    connect(uart_thread->my_serialport,SIGNAL(readyRead()),uart_thread,SLOT(UART_RX_Handler()));
+    file.setFileName("default.csv");
 
     connect(ui->checkBox_1, SIGNAL(clicked()), this, SLOT(on_checkBox_clicked()));
     connect(ui->checkBox_2, SIGNAL(clicked()), this, SLOT(on_checkBox_clicked()));
@@ -54,265 +42,187 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->checkBox_14, SIGNAL(clicked()), this, SLOT(on_checkBox_clicked()));
     connect(ui->checkBox_15, SIGNAL(clicked()), this, SLOT(on_checkBox_clicked()));
     connect(ui->checkBox_16, SIGNAL(clicked()), this, SLOT(on_checkBox_clicked()));
+
+    tcpclient_thread = new TcpClientThread("tcpclientthread", this);
+    tcpclient_thread->socket = new QTcpSocket;
+    connect(tcpclient_thread->socket,SIGNAL(connected()),tcpclient_thread,SLOT(socketconnected()));
+    connect(tcpclient_thread->socket, SIGNAL(readyRead()), tcpclient_thread, SLOT(socketreadyread()));
+    tcpclient_thread->timer = new QTimer(this);
+    connect(tcpclient_thread->timer, SIGNAL(timeout()), tcpclient_thread, SLOT(tcptimeout()));
+    tcpclient_thread->start();
+
+    uart_thread = new UartThread("uartthread", this);
+    uart_thread->my_serialport= new QSerialPort;
+    connect(uart_thread->my_serialport, SIGNAL(readyRead()), uart_thread, SLOT(UART_RX_Handler()));
+    uart_thread->start();
+
+    graph_thread = new GraphThread("graphthread", this);
+    graph_thread->start();
+
+    on_checkUartPort();
 }
 
 MainWindow::~MainWindow()
 {
     uart_thread->quit();
-    text_thread->quit();
+    graph_thread->quit();
+    tcpclient_thread->quit();
     if(file.isOpen())file.close();
     delete ui;
 }
 
-void MainWindow::on_pushButton_OpenSerial_clicked()
-{
-    static int count = 0;
-
-    if(ui->Port->currentText() == "NONE")
-    {
-        return;
-    }
-
-    if(++count%2 != 0)
-    {
-        ui->pushButton_OpenSerial->setText("关闭串口");
-        uart_state = true;
-        isWireless = false;
-
-        uart_thread->my_serialport->setPortName(ui->Port->currentText());
-        uart_thread->my_serialport->open(QIODevice::ReadWrite);
-        uart_thread->my_serialport->setBaudRate(QSerialPort::Baud115200,QSerialPort::AllDirections);
-        uart_thread->my_serialport->setDataBits(QSerialPort::Data8);
-        uart_thread->my_serialport->setParity(QSerialPort::NoParity);
-        uart_thread->my_serialport->setStopBits(QSerialPort::OneStop);
-        uart_thread->my_serialport->setFlowControl(QSerialPort::NoFlowControl);
-        uart_thread->my_serialport->setFlowControl(QSerialPort::NoFlowControl);
-
-        ui->Port->setEditable(false);
-        ui->pushButton_wireless->setEnabled(false);
-
-        ui->pushButton_StartCollect->setEnabled(true);
-        ui->pushButton_SetParam->setEnabled(true);
-
-        ui->pushButton_Reset_2->setEnabled(true);
-        ui->pushButton_SetServer->setEnabled(true);
-    }
-    else
-    {
-        ui->pushButton_OpenSerial->setText("有线串口");
-        uart_state = false;
-        uart_thread->my_serialport->close();
-        ui->pushButton_wireless->setEnabled(true);
-
-
-        ui->Port->setEditable(true);
-        ui->pushButton_StartCollect->setEnabled(false);
-        ui->pushButton_SetParam->setEnabled(false);
-        ui->pushButton_Reset_2->setEnabled(false);
-        ui->pushButton_SetServer->setEnabled(false);
-    }
-}
-
 void MainWindow::on_pushButton_wireless_clicked()
 {
-     static int count = 0;
+     if(ui->Port->currentText() == "NONE")return;
 
-     if(ui->Port->currentText() == "NONE")
-     {
-         return;
-     }
-
-     if(++count%2 != 0)
-     {
-         ui->pushButton_wireless->setText("关闭串口");
-         uart_state = true;
-         isWireless = true;
+     if(ui->pushButton_wireless->text() == "无线串口"){
+         bool isOK = true;
          uart_thread->my_serialport->setPortName(ui->Port->currentText());
-         uart_thread->my_serialport->open(QIODevice::ReadWrite);
-         uart_thread->my_serialport->setBaudRate(QSerialPort::Baud38400,QSerialPort::AllDirections);
-         uart_thread->my_serialport->setDataBits(QSerialPort::Data8);
-         uart_thread->my_serialport->setParity(QSerialPort::NoParity);
-         uart_thread->my_serialport->setStopBits(QSerialPort::OneStop);
-         uart_thread->my_serialport->setFlowControl(QSerialPort::NoFlowControl);
-         uart_thread->my_serialport->setFlowControl(QSerialPort::NoFlowControl);
+         isOK = isOK && uart_thread->my_serialport->open(QIODevice::ReadWrite);
+         isOK = isOK && uart_thread->my_serialport->setBaudRate(QSerialPort::Baud38400,QSerialPort::AllDirections);
+         isOK = isOK && uart_thread->my_serialport->setDataBits(QSerialPort::Data8);
+         isOK = isOK && uart_thread->my_serialport->setParity(QSerialPort::NoParity);
+         isOK = isOK && uart_thread->my_serialport->setStopBits(QSerialPort::OneStop);
+         isOK = isOK && uart_thread->my_serialport->setFlowControl(QSerialPort::NoFlowControl);
+         if(!isOK)
+         {
+             QMessageBox::information(this, tr("采集分析软件"), tr("串口可能被占用！\n"));
+             return;
+         }
 
-         ui->Port->setEditable(false);
-         ui->pushButton_OpenSerial->setEnabled(false);
-
-         ui->pushButton_StartCollect->setEnabled(true);
-         ui->pushButton_SetParam->setEnabled(true);
-         ui->pushButton_Reset_2->setEnabled(true);
-         ui->pushButton_SetServer->setEnabled(true);
-     }
-     else
-     {
-         ui->pushButton_wireless->setText("无线串口");
-         uart_state = false;
-
+         ui->pushButton_wireless->setText("关闭串口");
+         changeState(STATE_OPEN_SERIAL);
+     }else{
          uart_thread->my_serialport->close();
-
-         //ui->Port->pushButton_SetServer->setEditable(true);
-         ui->pushButton_OpenSerial->setEnabled(true);
-
-         ui->pushButton_StartCollect->setEnabled(false);
-         ui->pushButton_SetParam->setEnabled(false);
-         ui->pushButton_Reset_2->setEnabled(false);
-         ui->pushButton_SetServer->setEnabled(false);
+         ui->pushButton_wireless->setText("无线串口");
+         changeState(STATE_NULL);
      }
-
-
 }
 
-void MainWindow::initSeialPort()
+void MainWindow::on_pushButton_SocketConnect_clicked()
+{
+    static int count = 0;
+    if(ui->pushButton_SocketConnect->text() != "断开连接"){
+        tcpclient_thread->socket->connectToHost("127.0.0.1",8080,QTcpSocket::ReadWrite);
+        tcpclient_thread->timer->start(TIMEOUTTIME);
+    }else{
+        tcpclient_thread->socket->close();
+        ui->pushButton_SocketConnect->setText("局域\n网络连接");
+        changeState(STATE_NULL);
+    }
+}
+
+void MainWindow::on_checkUartPort()
 {
     QList<QSerialPortInfo> infos = QSerialPortInfo::availablePorts();
     ui->Port->clear();
-    if(infos.isEmpty())
-    {
+    if(infos.isEmpty()){
         ui->Port->addItem("NONE");
         return;
     }
-    foreach (QSerialPortInfo info, infos)
-    {
+    foreach (QSerialPortInfo info, infos){
         ui->Port->addItem(info.portName());
     }
 }
 
-void MainWindow::on_pushButton_Send_clicked()
-{
-    if(ui->Input->text().isEmpty() || !uart_state)
-        return;
-    if(ui->check_newLine->isChecked())
-        uart_thread->my_serialport->write(ui->Input->text().toLatin1() + "\r\n");
-    else
-        uart_thread->my_serialport->write(ui->Input->text().toLatin1());
-}
-
-
 
 void MainWindow::on_pushButton_GetCOM_clicked()
 {
-    initSeialPort();
+    on_checkUartPort();
 }
 
 void MainWindow::on_pushButton_StartCollect_clicked()
 {
-    if(!uart_state)return;
-    if(ui->pushButton_StartCollect->text() == "开始采集")
-    {
-        ui->pushButton_OpenSerial->setEnabled(false);
+    if(connectType != CONNECT_SOCKET)return;
+    if(ui->pushButton_StartCollect->text() == "开始采集"){
+        changeState(STATE_START_COLLECT);
+        tcpclient_thread->socket->write("StartToSend\r\n");
+        tcpclient_thread->timer->start(TIMEOUTTIME);
+        qDebug()<<"socket send:"<<"StartToSend\r\n";
 
-        ui->pushButton_SetParam->setEnabled(false);
-        ui->pushButton_Reset_2->setEnabled(false);
-        ui->pushButton_SetServer->setEnabled(false);
-
-        file.open( QIODevice::ReadWrite | QIODevice::Text);
-        uart_thread->my_serialport->write("StartToSend\r\n");
         ui->pushButton_StartCollect->setText("结束采集");
-    }
-    else if(ui->pushButton_StartCollect->text() == "结束采集")
-    {
-
-        ui->pushButton_Reset->setEnabled(true);
-        if(isWireless)
-        {
-            ui->pushButton_wireless->setEnabled(true);
-        }
-        else
-        {
-            ui->pushButton_OpenSerial->setEnabled(true);
-        }
-
-
-        ui->pushButton_SetParam->setEnabled(true);
-        ui->pushButton_Reset_2->setEnabled(true);
-        ui->pushButton_SetServer->setEnabled(true);
-
-
-        file.close();
-        uart_thread->my_serialport->write("StopToSend\r\n");
-        uart_thread->timer->start(2000);
+    }else if(ui->pushButton_StartCollect->text() == "结束采集"){
+        changeState(STATE_STOP_COLLECT);
+        tcpclient_thread->socket->write("StopToSend\r\n");
+        tcpclient_thread->timer->start(TIMEOUTTIME);
         qDebug()<<"uart send:"<<"StopToSend\r\n";
-        this->isStart = false;
+
+        this->isStartCollect = false;
         ui->pushButton_StartCollect->setText("继续采集");
-    }
-    else if(ui->pushButton_StartCollect->text() == "继续采集")
-    {
-        if(!uart_state)return;
-
-        ui->pushButton_Reset->setEnabled(false);
-        ui->pushButton_OpenSerial->setEnabled(false);
-        ui->pushButton_wireless->setEnabled(false);
-
-        ui->pushButton_SetParam->setEnabled(false);
-        ui->pushButton_Reset_2->setEnabled(false);
-        ui->pushButton_SetServer->setEnabled(false);
-
-
-        file.open( QIODevice::Append | QIODevice::Text);
-        uart_thread->my_serialport->write("StartToSend\r\n");
+    }else if(ui->pushButton_StartCollect->text() == "继续采集"){
+        changeState(STATE_START_COLLECT);
+        tcpclient_thread->socket->write("StartToSend\r\n");
+        tcpclient_thread->timer->start(TIMEOUTTIME);
         qDebug()<<"uart send:"<<"StartToSend\r\n";
         ui->pushButton_StartCollect->setText("结束采集");
     }
 }
 
-
-void MainWindow::on_pushButton_Reset_clicked()
+void MainWindow::on_pushButton_SaveData_clicked()
 {
-    if(!uart_state)return;
-
     QString fileName = QFileDialog::getSaveFileName (this, tr("保存数据"),"",tr("日志文件 (*.csv)"));
-    if(!fileName.isEmpty ())
-    {
+    if(!fileName.isEmpty()){
           file.copy("./default.csv",fileName);
           QFile::remove("./default.csv");
     }
 
-    ui->pushButton_OpenSerial->setEnabled(true);
-    ui->pushButton_Reset->setEnabled(false);
-    isStart = false;
     time.clear();
-    for(int i = 0;i<16;i++)
-    {
+    for(int i = 0; i < 16; i++){
         value[i].clear();
     }
     timeCount = 0;
+
     ui->pushButton_StartCollect->setText("开始采集");
+    if(connectType == CONNECT_SERIAL)changeState(STATE_OPEN_SERIAL);
+    if(connectType == CONNECT_SOCKET)changeState(STATE_CONNECT_SOCKET);
 }
+
 
 void MainWindow::on_pushButton_SetParam_clicked()
 {
-    if(!uart_state)return;
-    uart_thread->my_serialport->write("GetParam\r\n");
-    uart_thread->timer->start(2000);
+    if(connectType == CONNECT_SERIAL){
+        uart_thread->my_serialport->write("GetParam\r\n");
+        uart_thread->timer->start(TIMEOUTTIME);
+    }else if(connectType == CONNECT_SOCKET){
+        tcpclient_thread->socket->write("GetParam\r\n");
+        tcpclient_thread->timer->start(TIMEOUTTIME);
+    }
 }
 
 void MainWindow::on_pushButton_Reset_2_clicked()
 {
-    if(!uart_state)return;
-    QStringList list;
-    bool isOK;
-    list<<tr("恢复出厂设置")<<tr("点错了");
-    QString select=QInputDialog::getItem(this,tr("采集分析软件"),tr("点击确定"),list,0,false,&isOK);
-    if(select == "恢复出厂设置" && isOK)
-    {
-        uart_thread->my_serialport->write("ResetOption\r\n");
-        uart_thread->timer->start(2000);
+    if(connectType == CONNECT_SERIAL || connectType == CONNECT_SOCKET){
+        bool isOK;
+        QStringList list;
+        list<<tr("恢复出厂设置")<<tr("点错了");
+        QString select=QInputDialog::getItem(this,tr("采集分析软件"),tr("点击确定"),list,0,false,&isOK);
+        if(select == "恢复出厂设置" && isOK){
+            if(connectType == CONNECT_SERIAL){
+                uart_thread->my_serialport->write("ResetOption\r\n");
+                uart_thread->timer->start(TIMEOUTTIME);
+            }else if(connectType == CONNECT_SOCKET){
+                tcpclient_thread->socket->write("ResetOption\r\n");
+                tcpclient_thread->timer->start(TIMEOUTTIME);
+            }
+        }
     }
 }
 
 void MainWindow::on_pushButton_SetServer_clicked()
 {
-    if(!uart_state)return;
-
-    QString server = QInputDialog::getText(this,tr("采集分析软件"),tr("域名或IP地址:端口"));
-    if(server.length() != 0)
-    {
+    if(connectType == CONNECT_SERIAL || connectType == CONNECT_SOCKET){
+        QString server = QInputDialog::getText(this,tr("采集分析软件"),tr("域名或IP地址:端口"));
+        if(server.length() == 0)return;
         qDebug()<<QString("SetServer" + server + "\r\n");
         QByteArray message;
         message.append(QString("SetServer" + server + "\r\n"));
-        uart_thread->my_serialport->write(message);
-        uart_thread->timer->start(2000);
+        if(connectType == CONNECT_SERIAL){
+            uart_thread->my_serialport->write(message);
+            uart_thread->timer->start(TIMEOUTTIME);
+        }else if(connectType == CONNECT_SOCKET){
+            tcpclient_thread->socket->write(message);
+            tcpclient_thread->timer->start(TIMEOUTTIME);
+        }
     }
 }
 
@@ -321,97 +231,35 @@ void MainWindow::on_checkBox_clicked()
     int count = 0,i;
     bool tmp_box[16] = {false};
 
-    if(ui->checkBox_1->isChecked())
-    {
-        tmp_box[0] = true;
-    }
-    if(ui->checkBox_2->isChecked())
-    {
-        tmp_box[1] = true;
-    }
-    if(ui->checkBox_3->isChecked())
-    {
-        tmp_box[2] = true;
-    }
+    if(ui->checkBox_1->isChecked())tmp_box[0] = true;
+    if(ui->checkBox_2->isChecked())tmp_box[1] = true;
+    if(ui->checkBox_3->isChecked())tmp_box[2] = true;
+    if(ui->checkBox_4->isChecked())tmp_box[3] = true;
+    if(ui->checkBox_5->isChecked())tmp_box[4] = true;
+    if(ui->checkBox_6->isChecked())tmp_box[5] = true;
+    if(ui->checkBox_7->isChecked())tmp_box[6] = true;
+    if(ui->checkBox_8->isChecked())tmp_box[7] = true;
+    if(ui->checkBox_9->isChecked())tmp_box[8] = true;
+    if(ui->checkBox_10->isChecked())tmp_box[9] = true;
+    if(ui->checkBox_11->isChecked())tmp_box[10] = true;
+    if(ui->checkBox_12->isChecked())tmp_box[11] = true;
+    if(ui->checkBox_13->isChecked())tmp_box[12] = true;
+    if(ui->checkBox_14->isChecked())tmp_box[13] = true;
+    if(ui->checkBox_15->isChecked())tmp_box[14] = true;
+    if(ui->checkBox_16->isChecked())tmp_box[15] = true;
 
-    if(ui->checkBox_4->isChecked())
-    {
-        tmp_box[3] = true;
-    }
-    if(ui->checkBox_5->isChecked())
-    {
-        tmp_box[4] = true;
-    }
-
-    if(ui->checkBox_6->isChecked())
-    {
-        tmp_box[5] = true;
-    }
-
-    if(ui->checkBox_7->isChecked())
-    {
-        tmp_box[6] = true;
-    }
-
-    if(ui->checkBox_8->isChecked())
-    {
-        tmp_box[7] = true;
-    }
-    if(ui->checkBox_9->isChecked())
-    {
-        tmp_box[8] = true;
-    }
-
-    if(ui->checkBox_10->isChecked())
-    {
-        tmp_box[9] = true;
-    }
-
-    if(ui->checkBox_11->isChecked())
-    {
-        tmp_box[10] = true;
-    }
-
-    if(ui->checkBox_12->isChecked())
-    {
-        tmp_box[11] = true;
-    }
-
-    if(ui->checkBox_13->isChecked())
-    {
-        tmp_box[12] = true;
-    }
-
-    if(ui->checkBox_14->isChecked())
-    {
-        tmp_box[13] = true;
-    }
-
-    if(ui->checkBox_15->isChecked())
-    {
-        tmp_box[14] = true;
-    }
-
-    if(ui->checkBox_16->isChecked())
-    {
-        tmp_box[15] = true;
-    }
-
-    for(i = 0,count = 0; i < 16; i++)
-    {
+    for(i = 0,count = 0; i < 16; i++){
         if(box[i])count++;
     }
 
-    for(i = 0; i < 16; i++)
-    {
+    for(i = 0; i < 16; i++){
         if(box[i] != tmp_box[i])break;
     }
+
     if(count <= 3)box[i] = tmp_box[i];
 
-    if(count >= 4)
-    {
-        if(tmp_box[i] == true)
-        {
+    if(count >= 4){
+        if(tmp_box[i] == true){
             qDebug()<<"channal"<<i+1<<"clicked";
             QMessageBox::information(this, tr("采集分析软件"), tr("最多选择四个通道！\n"));
             switch(i)
@@ -466,11 +314,96 @@ void MainWindow::on_checkBox_clicked()
                     break;
             }
 
-        }
-        else
-        {
+        }else{
             box[i] = false;
         }
+    }
+}
+
+void MainWindow::changeState(STATE_TYPE type)
+{
+    switch(type)
+    {
+    case STATE_NULL:
+        ui->Port->setEditable(true);
+        ui->pushButton_GetCOM->setEnabled(true);
+        ui->pushButton_wireless->setEnabled(true);
+        ui->pushButton_SocketConnect->setEnabled(true);
+
+        ui->pushButton_SetParam->setEnabled(false);
+        ui->pushButton_SetServer->setEnabled(false);
+        ui->pushButton_Reset_2->setEnabled(false);
+        ui->pushButton_StartCollect->setEnabled(false);
+        ui->pushButton_SaveData->setEnabled(false);
+
+        connectType = CONNECT_NULL;
+        if(!file.isOpen())file.close();
+        break;
+
+    case STATE_OPEN_SERIAL:
+        ui->Port->setEditable(false);
+        ui->pushButton_GetCOM->setEnabled(false);
+        ui->pushButton_wireless->setEnabled(true);
+        ui->pushButton_SocketConnect->setEnabled(false);
+
+        ui->pushButton_SetParam->setEnabled(true);
+        ui->pushButton_SetServer->setEnabled(true);
+        ui->pushButton_Reset_2->setEnabled(true);
+        ui->pushButton_StartCollect->setEnabled(false);
+        ui->pushButton_SaveData->setEnabled(false);
+
+        connectType = CONNECT_SERIAL;
+        isStartCollect = false;
+        if(!file.isOpen())file.close();
+        break;
+
+    case STATE_START_COLLECT:
+        ui->Port->setEditable(false);
+        ui->pushButton_GetCOM->setEnabled(false);
+        ui->pushButton_wireless->setEnabled(false);
+        ui->pushButton_SocketConnect->setEnabled(false);
+
+        ui->pushButton_SetParam->setEnabled(false);
+        ui->pushButton_SetServer->setEnabled(false);
+        ui->pushButton_Reset_2->setEnabled(false);
+        ui->pushButton_StartCollect->setEnabled(true);
+        ui->pushButton_SaveData->setEnabled(false);
+
+        isStartCollect = true;
+        if(!file.isOpen())file.open( QIODevice::ReadWrite | QIODevice::Append |QIODevice::Text);
+        break;
+
+    case STATE_STOP_COLLECT:
+        ui->Port->setEditable(false);
+        ui->pushButton_GetCOM->setEnabled(false);
+        ui->pushButton_wireless->setEnabled(false);
+        ui->pushButton_SocketConnect->setEnabled(true);
+
+        ui->pushButton_SetParam->setEnabled(true);
+        ui->pushButton_SetServer->setEnabled(true);
+        ui->pushButton_Reset_2->setEnabled(true);
+        ui->pushButton_StartCollect->setEnabled(true);
+        ui->pushButton_SaveData->setEnabled(true);
+
+        isStartCollect = false;
+        if(!file.isOpen())file.close();
+        break;
+
+    case STATE_CONNECT_SOCKET:
+        ui->Port->setEditable(false);
+        ui->pushButton_GetCOM->setEnabled(false);
+        ui->pushButton_wireless->setEnabled(false);
+
+        ui->pushButton_SetParam->setEnabled(true);
+        ui->pushButton_SetServer->setEnabled(true);
+        ui->pushButton_Reset_2->setEnabled(true);
+        ui->pushButton_StartCollect->setEnabled(true);
+        ui->pushButton_SaveData->setEnabled(false);
+
+        connectType = CONNECT_SOCKET;
+        isStartCollect = false;
+        if(!file.isOpen())file.close();
+        break;
     }
 }
 
@@ -530,3 +463,4 @@ void MainWindow::PressSaveGraph_4()
     QString fileName = QFileDialog::getSaveFileName (this,tr("保存图像"),"",tr("图像 (*.png)"));
     ui->widget_4->savePng(fileName,ui->widget_4->width(),ui->widget_4->height());
 }
+

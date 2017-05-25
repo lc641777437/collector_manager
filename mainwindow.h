@@ -9,17 +9,32 @@
 #include <QThread>
 #include <QPoint>
 
-
 #include "uartthread.h"
 #include "graphthread.h"
+#include "tcpclientthread.h"
 #include "dialog.h"
+
 #define MAX_SHOW_TIME 120 * 1000 //ms
-#define TIME_SLOT 1000  //ms
+#define TIMEOUTTIME (1000)
+
+
+typedef enum{
+    STATE_NULL,
+    STATE_OPEN_SERIAL,
+    STATE_START_COLLECT,
+    STATE_STOP_COLLECT,
+    STATE_CONNECT_SOCKET
+} STATE_TYPE;
+
+typedef enum{
+    CONNECT_NULL,
+    CONNECT_SERIAL,
+    CONNECT_SOCKET,
+} CONNECT_TYPE;
+
 namespace Ui {
 class MainWindow;
 }
-
-class UartThread;
 
 class MainWindow : public QMainWindow
 {
@@ -28,35 +43,42 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
     Ui::MainWindow *ui;
-    UartThread *uart_thread;
-    Dialog *setCTRL;
-    bool isStart;
 
-    void initSeialPort();
     void show_wave();
+    void changeState(STATE_TYPE type);
 
+public:
+    QFile file;
+    bool box[16] = {false};
+    unsigned int timeCount = 0;
+    bool isStartCollect = false;
+    bool isChannal[16] = {false};
+    CONNECT_TYPE connectType = CONNECT_NULL;
 
 private:
-    bool isWireless = false;
-    bool uart_state = false;
-
     QCustomPlot *customPlot;
-    TextTread *text_thread;
-    QTimer *timer;
+    GraphThread *graph_thread;
+    UartThread *uart_thread;
+    TcpClientThread *tcpclient_thread;
+
+    void on_checkUartPort();
+
 
 private slots:
-    void on_pushButton_Send_clicked();
     void on_pushButton_GetCOM_clicked();
-    void on_pushButton_StartCollect_clicked();
-    void on_pushButton_OpenSerial_clicked();
-    void on_pushButton_Reset_clicked();
-    void on_pushButton_Reset_2_clicked();
-    void on_checkBox_clicked();
     void on_pushButton_wireless_clicked();
+
+    void on_pushButton_SocketConnect_clicked();
+
     void on_pushButton_SetParam_clicked();
     void on_pushButton_SetServer_clicked();
+    void on_pushButton_Reset_2_clicked();
+
+    void on_pushButton_StartCollect_clicked();
+    void on_pushButton_SaveData_clicked();
+
+    void on_checkBox_clicked();
 
 public slots:
 

@@ -6,26 +6,19 @@
 #include <Qdebug>
 #include <Qtime>
 #include <QMenu>
-#include <QMessageBox>
 #include <QTextStream>
 
-extern QByteArray ReadData;
 extern QVector<double> time;
 extern QVector<double> value[16];
-extern QFile file;
 
-extern bool isChannal[16];
-extern int timer_Count;
-extern bool box[16];
-
-TextTread::TextTread(QString message, QObject *parent) :
+GraphThread::GraphThread(QString message, QObject *parent) :
     QThread(parent)
   , message(message)
 {
     pMainWindow = static_cast<MainWindow *>(parent);
     graph_Initial();
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(ShowWave()), Qt::DirectConnection);
+    this->timer = new QTimer(this);
+    connect(this->timer, SIGNAL(timeout()), this, SLOT(ShowWave()));
     timer->start(1000);
     pMainWindow->ui->widget->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(pMainWindow->ui->widget, SIGNAL(customContextMenuRequested(QPoint)), pMainWindow, SLOT(PresscontextMenuRequest_1(QPoint)));
@@ -38,29 +31,24 @@ TextTread::TextTread(QString message, QObject *parent) :
 
 }
 
-TextTread::~TextTread()
+GraphThread::~GraphThread()
 {
     this->wait();
     qDebug() << this<<"over";
     this->exit();
 }
 
-void TextTread::setMessage(QString message)
+void GraphThread::setMessage(QString message)
 {
     this->message = message;
 }
 
-QString TextTread::getMessage()
+QString GraphThread::getMessage()
 {
     return this->message;
 }
 
-void TextTread::run()
-{
-    exec();
-}
-
-void TextTread::ShowWave()
+void GraphThread::ShowWave()
 {
     int i = 0, count = 0;
     if(time[time.length()-1] > MAX_SHOW_TIME)
@@ -78,10 +66,8 @@ void TextTread::ShowWave()
         pMainWindow->ui->widget_4->xAxis->setRange(0,MAX_SHOW_TIME);
     }
 
-    for(; i < 16;i++)
-    {
-        if(box[i])
-        {
+    for(; i < 16;i++){
+        if(pMainWindow->box[i]){
             switch(count++)
             {
             case 0:
@@ -106,10 +92,8 @@ void TextTread::ShowWave()
         }
     }
     count--;
-    while(count++ < 4)
-    {
-        switch(count++)
-        {
+    while(count++ < 4){
+        switch(count++){
         case 0:
             pMainWindow->ui->widget->graph()->setVisible(false);
             break;
@@ -133,7 +117,7 @@ void TextTread::ShowWave()
     pMainWindow->ui->widget_4->replot();
 }
 
-void TextTread::graph_Initial()
+void GraphThread::graph_Initial()
 {
     QPen pen;
     pen.setColor(QColor(0, 0, 255, 200));

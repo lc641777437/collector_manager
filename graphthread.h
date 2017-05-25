@@ -1,8 +1,8 @@
-#ifndef TEXTTHREAD
-#define TEXTTHREAD
+#ifndef GRAPHTHREAD_H
+#define GRAPHTHREAD_H
+#include <iostream>
 
 #include <QThread>
-#include <iostream>
 #include <QDebug>
 #include <QTimer>
 
@@ -10,16 +10,15 @@ using namespace std;
 
 class MainWindow;
 
-class TextTread : public QThread
+class GraphThread : public QThread
 {
     Q_OBJECT
 public:
-    TextTread(QString message = "", QObject *parent = NULL);
-    ~TextTread();
+    GraphThread(QString message = "", QObject *parent = NULL);
+    ~GraphThread();
     MainWindow  *pMainWindow;
     void setMessage(QString);
     QString getMessage();
-    void run();
     void graph_Initial();
 
 private:
@@ -29,5 +28,5 @@ private:
 public slots:
     void ShowWave();
 };
-#endif // TEXTTHREAD
+#endif // GRAPHTHREAD_H
 

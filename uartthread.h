@@ -1,17 +1,12 @@
-#ifndef GRAPHTHREAD
-#define GRAPHTHREAD
+#ifndef UARTTHREAD_H
+#define UARTTHREAD_H
+#include <iostream>
 
 #include <QThread>
-#include <iostream>
 #include <QDebug>
-
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <QTimer>
-
-namespace Ui {
-class UartThread;
-}
 
 class MainWindow;
 
@@ -25,21 +20,13 @@ public:
     void setMessage(QString);
     QString getMessage();
 
-    QSerialPort *my_serialport;
-
     QTimer *timer;
-
-
-
-protected:
-    void run();
+    QSerialPort *my_serialport;
 
 private:
     QString message;
+    QByteArray CommandData;
     volatile bool stopped;
-    void usart_proc(QByteArray ReadBuf);
-    void time_MoveLeftInsert(double data);
-    void data_MoveLeftInsert(int channal, double data);
 
 
 private slots:
@@ -61,5 +48,5 @@ typedef enum{
     CMD_SET_ERROR    = 0X99
 } CMD_TYPE;
 
-#endif // GRAPHTHREAD
+#endif // UARTTHREAD_H
 
