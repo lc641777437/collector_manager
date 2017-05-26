@@ -90,12 +90,12 @@ void MainWindow::on_pushButton_wireless_clicked()
              return;
          }
 
-         ui->pushButton_wireless->setText("关闭串口");
          changeState(STATE_OPEN_SERIAL);
+         ui->pushButton_wireless->setText("关闭串口");
      }else{
          uart_thread->my_serialport->close();
-         ui->pushButton_wireless->setText("无线串口");
          changeState(STATE_NULL);
+         ui->pushButton_wireless->setText("无线串口");
      }
 }
 
@@ -107,8 +107,8 @@ void MainWindow::on_pushButton_SocketConnect_clicked()
         tcpclient_thread->timer->start(TIMEOUTTIME);
     }else{
         tcpclient_thread->socket->close();
-        ui->pushButton_SocketConnect->setText("局域\n网络连接");
         changeState(STATE_NULL);
+        ui->pushButton_SocketConnect->setText("局域\n网络连接");
     }
 }
 
@@ -135,25 +135,25 @@ void MainWindow::on_pushButton_StartCollect_clicked()
 {
     if(connectType != CONNECT_SOCKET)return;
     if(ui->pushButton_StartCollect->text() == "开始采集"){
-        changeState(STATE_START_COLLECT);
         tcpclient_thread->socket->write("StartToSend\r\n");
         tcpclient_thread->timer->start(TIMEOUTTIME);
         qDebug()<<"socket send:"<<"StartToSend\r\n";
 
+        changeState(STATE_START_COLLECT);
         ui->pushButton_StartCollect->setText("结束采集");
     }else if(ui->pushButton_StartCollect->text() == "结束采集"){
-        changeState(STATE_STOP_COLLECT);
         tcpclient_thread->socket->write("StopToSend\r\n");
         tcpclient_thread->timer->start(TIMEOUTTIME);
         qDebug()<<"uart send:"<<"StopToSend\r\n";
 
-        this->isStartCollect = false;
+        changeState(STATE_STOP_COLLECT);
         ui->pushButton_StartCollect->setText("继续采集");
     }else if(ui->pushButton_StartCollect->text() == "继续采集"){
-        changeState(STATE_START_COLLECT);
         tcpclient_thread->socket->write("StartToSend\r\n");
         tcpclient_thread->timer->start(TIMEOUTTIME);
         qDebug()<<"uart send:"<<"StartToSend\r\n";
+
+        changeState(STATE_START_COLLECT);
         ui->pushButton_StartCollect->setText("结束采集");
     }
 }
@@ -162,8 +162,9 @@ void MainWindow::on_pushButton_SaveData_clicked()
 {
     QString fileName = QFileDialog::getSaveFileName (this, tr("保存数据"),"",tr("日志文件 (*.csv)"));
     if(!fileName.isEmpty()){
-          file.copy("./default.csv",fileName);
-          QFile::remove("./default.csv");
+        if(file.isOpen())file.close();
+        file.copy("./default.csv",fileName);
+        QFile::remove("./default.csv");
     }
 
     time.clear();
@@ -172,9 +173,10 @@ void MainWindow::on_pushButton_SaveData_clicked()
     }
     timeCount = 0;
 
-    ui->pushButton_StartCollect->setText("开始采集");
     if(connectType == CONNECT_SERIAL)changeState(STATE_OPEN_SERIAL);
     if(connectType == CONNECT_SOCKET)changeState(STATE_CONNECT_SOCKET);
+
+    ui->pushButton_StartCollect->setText("开始采集");
 }
 
 
@@ -337,7 +339,7 @@ void MainWindow::changeState(STATE_TYPE type)
         ui->pushButton_SaveData->setEnabled(false);
 
         connectType = CONNECT_NULL;
-        if(!file.isOpen())file.close();
+        if(file.isOpen())file.close();
         break;
 
     case STATE_OPEN_SERIAL:
@@ -354,7 +356,7 @@ void MainWindow::changeState(STATE_TYPE type)
 
         connectType = CONNECT_SERIAL;
         isStartCollect = false;
-        if(!file.isOpen())file.close();
+        if(file.isOpen())file.close();
         break;
 
     case STATE_START_COLLECT:
@@ -386,7 +388,7 @@ void MainWindow::changeState(STATE_TYPE type)
         ui->pushButton_SaveData->setEnabled(true);
 
         isStartCollect = false;
-        if(!file.isOpen())file.close();
+        if(file.isOpen())file.close();
         break;
 
     case STATE_CONNECT_SOCKET:
@@ -402,7 +404,7 @@ void MainWindow::changeState(STATE_TYPE type)
 
         connectType = CONNECT_SOCKET;
         isStartCollect = false;
-        if(!file.isOpen())file.close();
+        if(file.isOpen())file.close();
         break;
     }
 }

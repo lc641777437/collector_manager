@@ -168,17 +168,16 @@ void TcpClientThread::ADValue_proc(QByteArray &ReadBuf)
         }
     }
 
-    if(pMainWindow->file.isOpen()){
-        QTextStream steam(&pMainWindow->file);
-        steam<<QTime::currentTime().toString()<<",";
-        for(int i = 0; i < 16; i++){
-            if(1)//pMainWindow->isChannal[i])
-                steam<<data[i]<<",";
-            else
-                steam<<"-,";
-        }
-        steam<<endl;
+    if(!pMainWindow->file.isOpen())pMainWindow->file.open( QIODevice::ReadWrite | QIODevice::Append |QIODevice::Text);
+    QTextStream steam(&pMainWindow->file);
+    steam<<QTime::currentTime().toString()<<",";
+    for(int i = 0; i < 16; i++){
+        if(1)//pMainWindow->isChannal[i])
+            steam<<data[i]<<",";
+        else
+            steam<<"-,";
     }
+    steam<<endl;
 }
 
 void TcpClientThread::time_MoveLeftInsert(double data)
