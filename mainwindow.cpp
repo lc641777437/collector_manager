@@ -103,7 +103,7 @@ void MainWindow::on_pushButton_SocketConnect_clicked()
 {
     static int count = 0;
     if(ui->pushButton_SocketConnect->text() != "断开连接"){
-        tcpclient_thread->socket->connectToHost("127.0.0.1",8080,QTcpSocket::ReadWrite);
+        tcpclient_thread->socket->connectToHost("192.168.0.7",23,QTcpSocket::ReadWrite);
         tcpclient_thread->timer->start(TIMEOUTTIME);
     }else{
         tcpclient_thread->socket->close();
