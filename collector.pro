@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2016-07-23T11:35:09
+# Project created by QtCreator 2017-09-29T12:15:29
 #
 #-------------------------------------------------
 
@@ -13,22 +13,23 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = collector
 TEMPLATE = app
 
+
 SOURCES += main.cpp\
         mainwindow.cpp \
-    qcustomplot.cpp \
-    uratthread.cpp \
     graphthread.cpp \
+    tcpclientthread.cpp \
     dialog.cpp \
-    tcpclientthread.cpp
+    uratthread.cpp \
+    qcustomplot.cpp
 
 HEADERS  += mainwindow.h \
-    qcustomplot.h \
-    uartthread.h \
     graphthread.h \
     dialog.h \
-    tcpclientthread.h
+    uartthread.h \
+    tcpclientthread.h \
+    qcustomplot.h
 
 FORMS    += mainwindow.ui \
     dialog.ui
 
-
+RC_FILE += myico.rc

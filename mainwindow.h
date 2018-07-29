@@ -8,6 +8,7 @@
 #include <QSerialPortInfo>
 #include <QThread>
 #include <QPoint>
+#include <QPointF>
 
 #include "uartthread.h"
 #include "graphthread.h"
@@ -15,7 +16,7 @@
 #include "dialog.h"
 
 #define MAX_SHOW_TIME 120 * 1000 //ms
-#define TIMEOUTTIME (1000)
+#define TIMEOUTTIME (1000 * 2)
 
 
 typedef enum{
@@ -32,6 +33,8 @@ typedef enum{
     CONNECT_SOCKET,
 } CONNECT_TYPE;
 
+#define STYLE_RED "color:red"
+#define STYLE_GREEN "color:green"
 namespace Ui {
 class MainWindow;
 }
@@ -50,17 +53,35 @@ public:
 
 public:
     QFile file;
-    bool box[16] = {false};
+    QFile vfile;
+    bool box[16] = {false};                   // 已选通道box
+    unsigned int samplerate = 0;              // 采样率
+    unsigned int samplerateTmp = 0;
     unsigned int timeCount = 0;
     bool isStartCollect = false;
-    bool isChannal[16] = {false};
+    bool isChannal[16] = {false};              // 可用通道box
     CONNECT_TYPE connectType = CONNECT_NULL;
 
-private:
+
+public:
+    QTimer *timer;
     QCustomPlot *customPlot;
     GraphThread *graph_thread;
     UartThread *uart_thread;
     TcpClientThread *tcpclient_thread;
+
+    // 新添加变量
+    double Density,e;
+    double AutoSavePeriod;
+    QString AutoSaveFile;
+    double H[20];
+    double PmaxList[20];         // 最大压强
+    double PminList[20];         // 最小压强
+    unsigned char baseValue;
+    QTimer *timer4AutoSaveFile;
+    int timerCount;
+    int AutoSaveFileId;
+    bool readInitialValue;
 
     void on_checkUartPort();
 
@@ -72,27 +93,19 @@ private slots:
     void on_pushButton_SocketConnect_clicked();
 
     void on_pushButton_SetParam_clicked();
-    void on_pushButton_SetServer_clicked();
-    void on_pushButton_Reset_2_clicked();
 
     void on_pushButton_StartCollect_clicked();
     void on_pushButton_SaveData_clicked();
 
     void on_checkBox_clicked();
+    void on_auto_save_file();
 
 public slots:
 
     void PresscontextMenuRequest_1(QPoint pos);
     void PressSaveGraph_1();
 
-    void PresscontextMenuRequest_2(QPoint pos);
-    void PressSaveGraph_2();
-
-    void PresscontextMenuRequest_3(QPoint pos);
-    void PressSaveGraph_3();
-
-    void PresscontextMenuRequest_4(QPoint pos);
-    void PressSaveGraph_4();
+    void flush_checkBox(void);
 
 };
 

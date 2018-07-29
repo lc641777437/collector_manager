@@ -24,6 +24,11 @@ private:
     QByteArray ReadData;
     QByteArray CommandData;
 
+    // 新增变量
+    int id;
+    int last_second;
+    double f_avg[16];           // 扰度均值
+
     void ADValue_proc(QByteArray &ReadBuf);
     void time_MoveLeftInsert(double data);
     void data_MoveLeftInsert(int channal, double data);

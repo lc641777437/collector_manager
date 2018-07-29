@@ -25,8 +25,13 @@ public:
 
 private:
     QString message;
+    QByteArray ReadData;
     QByteArray CommandData;
     volatile bool stopped;
+
+    void ADValue_proc(QByteArray &ReadBuf);
+    void time_MoveLeftInsert(double data);
+    void data_MoveLeftInsert(int channal, double data);
 
 
 private slots:

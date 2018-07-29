@@ -19,14 +19,18 @@ public:
     MainWindow  *pMainWindow;
     void setMessage(QString);
     QString getMessage();
-    void graph_Initial();
+
+    void lhc_graph_Initial();  // 初始化画图
+//    void graph_Initial();
 
 private:
     QString message;
     QTimer *timer;
 
 public slots:
-    void ShowWave();
+
+    void lhc_ShowWave();     // 画图
+//    void ShowWave();
 };
 #endif // GRAPHTHREAD_H
 
