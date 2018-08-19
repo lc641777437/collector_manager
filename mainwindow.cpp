@@ -91,6 +91,20 @@ MainWindow::MainWindow(QWidget *parent) :
         PminList[i] = 0;
     }
 
+    QByteArray CommandData = "1234567891012";
+    QString    proIdStr = "123";
+    QString    proNameStr = "456";
+    QString    testPointNameList[16] = {"1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"};
+
+    Dialog* event = new Dialog(this, CommandData[3],
+                               CommandData[4], CommandData[5],
+                               CommandData[6], CommandData[7],
+                               CommandData[8], CommandData[9],
+                               proIdStr,proNameStr,
+                               testPointNameList);
+    event->setModal(true);
+    event->show();
+
 }
 
 // 关线程,关文件

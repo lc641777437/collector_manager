@@ -136,6 +136,22 @@ private slots:
     void on_Pbtn_g3_clicked();
 
 
+    void on_comboBox_range1_currentIndexChanged(const QString &arg1);
+    void on_comboBox_range2_currentTextChanged(const QString &arg1);
+    void on_comboBox_range3_currentTextChanged(const QString &arg1);
+    void on_comboBox_range4_currentTextChanged(const QString &arg1);
+    void on_comboBox_range5_currentTextChanged(const QString &arg1);
+    void on_comboBox_range6_currentTextChanged(const QString &arg1);
+    void on_comboBox_range7_currentTextChanged(const QString &arg1);
+    void on_comboBox_range8_currentTextChanged(const QString &arg1);
+    void on_comboBox_range9_currentTextChanged(const QString &arg1);
+    void on_comboBox_range10_currentTextChanged(const QString &arg1);
+    void on_comboBox_range11_currentTextChanged(const QString &arg1);
+    void on_comboBox_range12_currentTextChanged(const QString &arg1);
+    void on_comboBox_range13_currentTextChanged(const QString &arg1);
+    void on_comboBox_range14_currentTextChanged(const QString &arg1);
+    void on_comboBox_range15_currentTextChanged(const QString &arg1);
+    void on_comboBox_range16_currentTextChanged(const QString &arg1);
 };
 
 #endif // DIALOG_H

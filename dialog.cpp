@@ -1011,6 +1011,7 @@ bool Dialog::help_saveParam(){
 }
 // 辅助函数 -- 设置压强
 void Dialog::help_setP(QString s, bool isMax){
+}/*{
     QStringList list = s.split(",");
     if(!isMax){
         if(list.at(0) != "-" ){
@@ -1214,7 +1215,7 @@ void Dialog::help_setP(QString s, bool isMax){
         if(list.at(15) != "-") ui->Pmax_16->setText(list.at(15));
         else ui->Pmax_16->setText(tr(""));
     }
-}
+}*/
 // 辅助函数 -- 读取压强
 void Dialog::help_readP(){
     // 读取压强
@@ -1971,3 +1972,323 @@ void Dialog::on_Pbtn_g3_clicked()
     this->ui->Pmin_16->setText(QString::number(-10000));
 }
 
+
+void Dialog::on_comboBox_range1_currentIndexChanged(const QString &arg1)
+{
+    if(arg1 == ""){
+        this->ui->Pmax_1->setText(QString(""));
+        this->ui->Pmin_1->setText(QString(""));
+    } else if(arg1 == "1K"){
+        this->ui->Pmax_1->setText(QString::number(1000));
+        this->ui->Pmin_1->setText(QString::number(-1000));
+    } else if(arg1 == "2K"){
+        this->ui->Pmax_1->setText(QString::number(2000));
+        this->ui->Pmin_1->setText(QString::number(-2000));
+    } else if(arg1 == "5K"){
+        this->ui->Pmax_1->setText(QString::number(5000));
+        this->ui->Pmin_1->setText(QString::number(-5000));
+    } else if(arg1 == "10K"){
+        this->ui->Pmax_1->setText(QString::number(10000));
+        this->ui->Pmin_1->setText(QString::number(-10000));
+    }
+}
+
+void Dialog::on_comboBox_range2_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == ""){
+        this->ui->Pmax_2->setText(QString(""));
+        this->ui->Pmin_2->setText(QString(""));
+    } else if(arg1 == "1K"){
+        this->ui->Pmax_2->setText(QString::number(1000));
+        this->ui->Pmin_2->setText(QString::number(-1000));
+    } else if(arg1 == "2K"){
+        this->ui->Pmax_2->setText(QString::number(2000));
+        this->ui->Pmin_2->setText(QString::number(-2000));
+    } else if(arg1 == "5K"){
+        this->ui->Pmax_2->setText(QString::number(5000));
+        this->ui->Pmin_2->setText(QString::number(-5000));
+    } else if(arg1 == "10K"){
+        this->ui->Pmax_2->setText(QString::number(10000));
+        this->ui->Pmin_2->setText(QString::number(-10000));
+    }
+}
+
+void Dialog::on_comboBox_range3_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == ""){
+        this->ui->Pmax_3->setText(QString(""));
+        this->ui->Pmin_3->setText(QString(""));
+    } else if(arg1 == "1K"){
+        this->ui->Pmax_3->setText(QString::number(1000));
+        this->ui->Pmin_3->setText(QString::number(-1000));
+    } else if(arg1 == "2K"){
+        this->ui->Pmax_3->setText(QString::number(2000));
+        this->ui->Pmin_3->setText(QString::number(-2000));
+    } else if(arg1 == "5K"){
+        this->ui->Pmax_3->setText(QString::number(5000));
+        this->ui->Pmin_3->setText(QString::number(-5000));
+    } else if(arg1 == "10K"){
+        this->ui->Pmax_3->setText(QString::number(10000));
+        this->ui->Pmin_3->setText(QString::number(-10000));
+    }
+}
+
+void Dialog::on_comboBox_range4_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == ""){
+        this->ui->Pmax_4->setText(QString(""));
+        this->ui->Pmin_4->setText(QString(""));
+    } else if(arg1 == "1K"){
+        this->ui->Pmax_4->setText(QString::number(1000));
+        this->ui->Pmin_4->setText(QString::number(-1000));
+    } else if(arg1 == "2K"){
+        this->ui->Pmax_4->setText(QString::number(2000));
+        this->ui->Pmin_4->setText(QString::number(-2000));
+    } else if(arg1 == "5K"){
+        this->ui->Pmax_4->setText(QString::number(5000));
+        this->ui->Pmin_4->setText(QString::number(-5000));
+    } else if(arg1 == "10K"){
+        this->ui->Pmax_4->setText(QString::number(10000));
+        this->ui->Pmin_4->setText(QString::number(-10000));
+    }
+}
+
+void Dialog::on_comboBox_range5_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == ""){
+        this->ui->Pmax_5->setText(QString(""));
+        this->ui->Pmin_5->setText(QString(""));
+    } else if(arg1 == "1K"){
+        this->ui->Pmax_5->setText(QString::number(1000));
+        this->ui->Pmin_5->setText(QString::number(-1000));
+    } else if(arg1 == "2K"){
+        this->ui->Pmax_5->setText(QString::number(2000));
+        this->ui->Pmin_5->setText(QString::number(-2000));
+    } else if(arg1 == "5K"){
+        this->ui->Pmax_5->setText(QString::number(5000));
+        this->ui->Pmin_5->setText(QString::number(-5000));
+    } else if(arg1 == "10K"){
+        this->ui->Pmax_5->setText(QString::number(10000));
+        this->ui->Pmin_5->setText(QString::number(-10000));
+    }
+}
+
+void Dialog::on_comboBox_range6_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == ""){
+        this->ui->Pmax_6->setText(QString(""));
+        this->ui->Pmin_6->setText(QString(""));
+    } else if(arg1 == "1K"){
+        this->ui->Pmax_6->setText(QString::number(1000));
+        this->ui->Pmin_6->setText(QString::number(-1000));
+    } else if(arg1 == "2K"){
+        this->ui->Pmax_6->setText(QString::number(2000));
+        this->ui->Pmin_6->setText(QString::number(-2000));
+    } else if(arg1 == "5K"){
+        this->ui->Pmax_6->setText(QString::number(5000));
+        this->ui->Pmin_6->setText(QString::number(-5000));
+    } else if(arg1 == "10K"){
+        this->ui->Pmax_6->setText(QString::number(10000));
+        this->ui->Pmin_6->setText(QString::number(-10000));
+    }
+}
+
+void Dialog::on_comboBox_range7_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == ""){
+        this->ui->Pmax_7->setText(QString(""));
+        this->ui->Pmin_7->setText(QString(""));
+    } else if(arg1 == "1K"){
+        this->ui->Pmax_7->setText(QString::number(1000));
+        this->ui->Pmin_7->setText(QString::number(-1000));
+    } else if(arg1 == "2K"){
+        this->ui->Pmax_7->setText(QString::number(2000));
+        this->ui->Pmin_7->setText(QString::number(-2000));
+    } else if(arg1 == "5K"){
+        this->ui->Pmax_7->setText(QString::number(5000));
+        this->ui->Pmin_7->setText(QString::number(-5000));
+    } else if(arg1 == "10K"){
+        this->ui->Pmax_7->setText(QString::number(10000));
+        this->ui->Pmin_7->setText(QString::number(-10000));
+    }
+}
+
+void Dialog::on_comboBox_range8_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == ""){
+        this->ui->Pmax_8->setText(QString(""));
+        this->ui->Pmin_8->setText(QString(""));
+    } else if(arg1 == "1K"){
+        this->ui->Pmax_8->setText(QString::number(1000));
+        this->ui->Pmin_8->setText(QString::number(-1000));
+    } else if(arg1 == "2K"){
+        this->ui->Pmax_8->setText(QString::number(2000));
+        this->ui->Pmin_8->setText(QString::number(-2000));
+    } else if(arg1 == "5K"){
+        this->ui->Pmax_8->setText(QString::number(5000));
+        this->ui->Pmin_8->setText(QString::number(-5000));
+    } else if(arg1 == "10K"){
+        this->ui->Pmax_8->setText(QString::number(10000));
+        this->ui->Pmin_8->setText(QString::number(-10000));
+    }
+}
+
+void Dialog::on_comboBox_range9_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == ""){
+        this->ui->Pmax_9->setText(QString(""));
+        this->ui->Pmin_9->setText(QString(""));
+    } else if(arg1 == "1K"){
+        this->ui->Pmax_9->setText(QString::number(1000));
+        this->ui->Pmin_9->setText(QString::number(-1000));
+    } else if(arg1 == "2K"){
+        this->ui->Pmax_9->setText(QString::number(2000));
+        this->ui->Pmin_9->setText(QString::number(-2000));
+    } else if(arg1 == "5K"){
+        this->ui->Pmax_9->setText(QString::number(5000));
+        this->ui->Pmin_9->setText(QString::number(-5000));
+    } else if(arg1 == "10K"){
+        this->ui->Pmax_9->setText(QString::number(10000));
+        this->ui->Pmin_9->setText(QString::number(-10000));
+    }
+}
+
+void Dialog::on_comboBox_range10_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == ""){
+        this->ui->Pmax_10->setText(QString(""));
+        this->ui->Pmin_10->setText(QString(""));
+    } else if(arg1 == "1K"){
+        this->ui->Pmax_10->setText(QString::number(1000));
+        this->ui->Pmin_10->setText(QString::number(-1000));
+    } else if(arg1 == "2K"){
+        this->ui->Pmax_10->setText(QString::number(2000));
+        this->ui->Pmin_10->setText(QString::number(-2000));
+    } else if(arg1 == "5K"){
+        this->ui->Pmax_10->setText(QString::number(5000));
+        this->ui->Pmin_10->setText(QString::number(-5000));
+    } else if(arg1 == "10K"){
+        this->ui->Pmax_10->setText(QString::number(10000));
+        this->ui->Pmin_10->setText(QString::number(-10000));
+    }
+}
+
+void Dialog::on_comboBox_range11_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == ""){
+        this->ui->Pmax_11->setText(QString(""));
+        this->ui->Pmin_11->setText(QString(""));
+    } else if(arg1 == "1K"){
+        this->ui->Pmax_11->setText(QString::number(1000));
+        this->ui->Pmin_11->setText(QString::number(-1000));
+    } else if(arg1 == "2K"){
+        this->ui->Pmax_11->setText(QString::number(2000));
+        this->ui->Pmin_11->setText(QString::number(-2000));
+    } else if(arg1 == "5K"){
+        this->ui->Pmax_11->setText(QString::number(5000));
+        this->ui->Pmin_11->setText(QString::number(-5000));
+    } else if(arg1 == "10K"){
+        this->ui->Pmax_11->setText(QString::number(10000));
+        this->ui->Pmin_11->setText(QString::number(-10000));
+    }
+}
+
+void Dialog::on_comboBox_range12_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == ""){
+        this->ui->Pmax_12->setText(QString(""));
+        this->ui->Pmin_12->setText(QString(""));
+    } else if(arg1 == "1K"){
+        this->ui->Pmax_12->setText(QString::number(1000));
+        this->ui->Pmin_12->setText(QString::number(-1000));
+    } else if(arg1 == "2K"){
+        this->ui->Pmax_12->setText(QString::number(2000));
+        this->ui->Pmin_12->setText(QString::number(-2000));
+    } else if(arg1 == "5K"){
+        this->ui->Pmax_12->setText(QString::number(5000));
+        this->ui->Pmin_12->setText(QString::number(-5000));
+    } else if(arg1 == "10K"){
+        this->ui->Pmax_12->setText(QString::number(10000));
+        this->ui->Pmin_12->setText(QString::number(-10000));
+    }
+}
+
+void Dialog::on_comboBox_range13_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == ""){
+        this->ui->Pmax_13->setText(QString(""));
+        this->ui->Pmin_13->setText(QString(""));
+    } else if(arg1 == "1K"){
+        this->ui->Pmax_13->setText(QString::number(1000));
+        this->ui->Pmin_13->setText(QString::number(-1000));
+    } else if(arg1 == "2K"){
+        this->ui->Pmax_13->setText(QString::number(2000));
+        this->ui->Pmin_13->setText(QString::number(-2000));
+    } else if(arg1 == "5K"){
+        this->ui->Pmax_13->setText(QString::number(5000));
+        this->ui->Pmin_13->setText(QString::number(-5000));
+    } else if(arg1 == "10K"){
+        this->ui->Pmax_13->setText(QString::number(10000));
+        this->ui->Pmin_13->setText(QString::number(-10000));
+    }
+}
+
+void Dialog::on_comboBox_range14_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == ""){
+        this->ui->Pmax_14->setText(QString(""));
+        this->ui->Pmin_14->setText(QString(""));
+    } else if(arg1 == "1K"){
+        this->ui->Pmax_14->setText(QString::number(1000));
+        this->ui->Pmin_14->setText(QString::number(-1000));
+    } else if(arg1 == "2K"){
+        this->ui->Pmax_14->setText(QString::number(2000));
+        this->ui->Pmin_14->setText(QString::number(-2000));
+    } else if(arg1 == "5K"){
+        this->ui->Pmax_14->setText(QString::number(5000));
+        this->ui->Pmin_14->setText(QString::number(-5000));
+    } else if(arg1 == "10K"){
+        this->ui->Pmax_14->setText(QString::number(10000));
+        this->ui->Pmin_14->setText(QString::number(-10000));
+    }
+}
+
+void Dialog::on_comboBox_range15_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == ""){
+        this->ui->Pmax_15->setText(QString(""));
+        this->ui->Pmin_15->setText(QString(""));
+    } else if(arg1 == "1K"){
+        this->ui->Pmax_15->setText(QString::number(1000));
+        this->ui->Pmin_15->setText(QString::number(-1000));
+    } else if(arg1 == "2K"){
+        this->ui->Pmax_15->setText(QString::number(2000));
+        this->ui->Pmin_15->setText(QString::number(-2000));
+    } else if(arg1 == "5K"){
+        this->ui->Pmax_15->setText(QString::number(5000));
+        this->ui->Pmin_15->setText(QString::number(-5000));
+    } else if(arg1 == "10K"){
+        this->ui->Pmax_15->setText(QString::number(10000));
+        this->ui->Pmin_15->setText(QString::number(-10000));
+    }
+}
+
+void Dialog::on_comboBox_range16_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == ""){
+        this->ui->Pmax_16->setText(QString(""));
+        this->ui->Pmin_16->setText(QString(""));
+    } else if(arg1 == "1K"){
+        this->ui->Pmax_16->setText(QString::number(1000));
+        this->ui->Pmin_16->setText(QString::number(-1000));
+    } else if(arg1 == "2K"){
+        this->ui->Pmax_16->setText(QString::number(2000));
+        this->ui->Pmin_16->setText(QString::number(-2000));
+    } else if(arg1 == "5K"){
+        this->ui->Pmax_16->setText(QString::number(5000));
+        this->ui->Pmin_16->setText(QString::number(-5000));
+    } else if(arg1 == "10K"){
+        this->ui->Pmax_16->setText(QString::number(10000));
+        this->ui->Pmin_16->setText(QString::number(-10000));
+    }
+}
