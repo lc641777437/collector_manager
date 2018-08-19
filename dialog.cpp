@@ -37,11 +37,13 @@ Dialog::Dialog(QWidget *parent, unsigned char devIDH, unsigned char devIDL, unsi
     devid = devIDH;
     devid <<= 8;
     devid += devIDL;
+    devid = 1001;
     QRegExp regExp("[0-9]{0,5}");
     ui->lineEdit_DevID->setValidator(new QRegExpValidator(regExp,this));
     this->ui->lineEdit_DevID->setText(QString::number(devid));
     pDevIDH = devIDH;
     pDevIDL = devIDL;
+
     // 2,设置采样频率
     ui->comboBox_SampleRte->setCurrentText(QString::number(fre));
     pFre = fre;
@@ -1009,213 +1011,198 @@ bool Dialog::help_saveParam(){
     cnt = 20;
     return true;
 }
+
+static int getIndexFromRange(int range){
+    if(range == 1000 || range == -1000){
+        return 1;
+    }else if(range == 2000 || range == -2000){
+        return 2;
+    }else if(range == 5000 || range == -5000){
+        return 3;
+    }else if(range == 10000 || range == -10000){
+        return 4;
+    }
+    return 0;
+}
+
 // 辅助函数 -- 设置压强
 void Dialog::help_setP(QString s, bool isMax){
-}/*{
     QStringList list = s.split(",");
     if(!isMax){
-        if(list.at(0) != "-" ){
-            if(list.at(0).toDouble() == -1000) ui->Pbtn_11->setChecked(true);
-            else if(list.at(0).toDouble() == -5000) ui->Pbtn_12->setChecked(true);
-            else if(list.at(0).toDouble() == -10000) ui->Pbtn_13->setChecked(true);
-            pMainWindow->PminList[0] = list.at(0).toDouble();
-            pMainWindow->PmaxList[0] = - pMainWindow->PminList[0] ;
 
-            ui->Pmin_1->setText(list.at(0));
+        for(int i = 0; i< 16; i++){
+            if(list.at(i) != "-"){
+                pMainWindow->PminList[i] = list.at(i).toDouble();
+                pMainWindow->PmaxList[i] = - pMainWindow->PminList[i] ;
+            }
+
+            switch(i){
+            case 0:
+                if(list.at(i) != "-"){
+                    this->ui->Pmax_1->setText(QString::number(-list.at(i).toDouble()));
+                    this->ui->Pmin_1->setText(QString::number(list.at(i).toDouble()));
+                    this->ui->comboBox_range1->setCurrentIndex(getIndexFromRange(list.at(i).toDouble()));
+                }else{
+                    ui->Pmax_1->setText(tr(""));
+                    ui->Pmin_1->setText(tr(""));
+                }
+                break;
+
+            case 1:
+                if(list.at(i) != "-"){
+                    this->ui->Pmax_2->setText(QString::number(-list.at(i).toDouble()));
+                    this->ui->Pmin_2->setText(QString::number(list.at(i).toDouble()));
+                    this->ui->comboBox_range2->setCurrentIndex(getIndexFromRange(list.at(i).toDouble()));
+                }else{
+                    ui->Pmax_2->setText(tr(""));
+                    ui->Pmin_2->setText(tr(""));
+                }
+                break;
+
+            case 2:
+                if(list.at(i) != "-"){
+                    this->ui->Pmax_3->setText(QString::number(-list.at(i).toDouble()));
+                    this->ui->Pmin_3->setText(QString::number(list.at(i).toDouble()));
+                    this->ui->comboBox_range3->setCurrentIndex(getIndexFromRange(list.at(i).toDouble()));
+                }else{
+                    ui->Pmax_3->setText(tr(""));
+                    ui->Pmin_3->setText(tr(""));
+                }
+                break;
+            case 3:
+                if(list.at(i) != "-"){
+                    this->ui->Pmax_4->setText(QString::number(-list.at(i).toDouble()));
+                    this->ui->Pmin_4->setText(QString::number(list.at(i).toDouble()));
+                    this->ui->comboBox_range4->setCurrentIndex(getIndexFromRange(list.at(i).toDouble()));
+                }else{
+                    ui->Pmax_4->setText(tr(""));
+                    ui->Pmin_4->setText(tr(""));
+                }
+                break;
+            case 4:
+                if(list.at(i) != "-"){
+                    this->ui->Pmax_5->setText(QString::number(-list.at(i).toDouble()));
+                    this->ui->Pmin_5->setText(QString::number(list.at(i).toDouble()));
+                    this->ui->comboBox_range5->setCurrentIndex(getIndexFromRange(list.at(i).toDouble()));
+                }else{
+                    ui->Pmax_5->setText(tr(""));
+                    ui->Pmin_5->setText(tr(""));
+                }
+                break;
+            case 5:
+                if(list.at(i) != "-"){
+                    this->ui->Pmax_6->setText(QString::number(-list.at(i).toDouble()));
+                    this->ui->Pmin_6->setText(QString::number(list.at(i).toDouble()));
+                    this->ui->comboBox_range6->setCurrentIndex(getIndexFromRange(list.at(i).toDouble()));
+                }else{
+                    ui->Pmax_6->setText(tr(""));
+                    ui->Pmin_6->setText(tr(""));
+                }
+                break;
+            case 6:
+                if(list.at(i) != "-"){
+                    this->ui->Pmax_7->setText(QString::number(-list.at(i).toDouble()));
+                    this->ui->Pmin_7->setText(QString::number(list.at(i).toDouble()));
+                    this->ui->comboBox_range7->setCurrentIndex(getIndexFromRange(list.at(i).toDouble()));
+                }else{
+                    ui->Pmax_7->setText(tr(""));
+                    ui->Pmin_7->setText(tr(""));
+                }
+                break;
+            case 7:
+                if(list.at(i) != "-"){
+                    this->ui->Pmax_8->setText(QString::number(-list.at(i).toDouble()));
+                    this->ui->Pmin_8->setText(QString::number(list.at(i).toDouble()));
+                    this->ui->comboBox_range8->setCurrentIndex(getIndexFromRange(list.at(i).toDouble()));
+                }else{
+                    ui->Pmax_8->setText(tr(""));
+                    ui->Pmin_8->setText(tr(""));
+                }
+                break;
+            case 8:
+                if(list.at(i) != "-"){
+                    this->ui->Pmax_9->setText(QString::number(-list.at(i).toDouble()));
+                    this->ui->Pmin_9->setText(QString::number(list.at(i).toDouble()));
+                    this->ui->comboBox_range9->setCurrentIndex(getIndexFromRange(list.at(i).toDouble()));
+                }else{
+                    ui->Pmax_9->setText(tr(""));
+                    ui->Pmin_9->setText(tr(""));
+                }
+                break;
+            case 9:
+                if(list.at(i) != "-"){
+                    this->ui->Pmax_10->setText(QString::number(-list.at(i).toDouble()));
+                    this->ui->Pmin_10->setText(QString::number(list.at(i).toDouble()));
+                    this->ui->comboBox_range10->setCurrentIndex(getIndexFromRange(list.at(i).toDouble()));
+                }else{
+                    ui->Pmax_10->setText(tr(""));
+                    ui->Pmin_10->setText(tr(""));
+                }
+                break;
+            case 10:
+                if(list.at(i) != "-"){
+                    this->ui->Pmax_11->setText(QString::number(-list.at(i).toDouble()));
+                    this->ui->Pmin_11->setText(QString::number(list.at(i).toDouble()));
+                    this->ui->comboBox_range11->setCurrentIndex(getIndexFromRange(list.at(i).toDouble()));
+                }else{
+                    ui->Pmax_11->setText(tr(""));
+                    ui->Pmin_11->setText(tr(""));
+                }
+                break;
+            case 11:
+                if(list.at(i) != "-"){
+                    this->ui->Pmax_12->setText(QString::number(-list.at(i).toDouble()));
+                    this->ui->Pmin_12->setText(QString::number(list.at(i).toDouble()));
+                    this->ui->comboBox_range12->setCurrentIndex(getIndexFromRange(list.at(i).toDouble()));
+                }else{
+                    ui->Pmax_12->setText(tr(""));
+                    ui->Pmin_12->setText(tr(""));
+                }
+                break;
+            case 12:
+                if(list.at(i) != "-"){
+                    this->ui->Pmax_13->setText(QString::number(-list.at(i).toDouble()));
+                    this->ui->Pmin_13->setText(QString::number(list.at(i).toDouble()));
+                    this->ui->comboBox_range13->setCurrentIndex(getIndexFromRange(list.at(i).toDouble()));
+                }else{
+                    ui->Pmax_13->setText(tr(""));
+                    ui->Pmin_13->setText(tr(""));
+                }
+                break;
+            case 13:
+                if(list.at(i) != "-"){
+                    this->ui->Pmax_14->setText(QString::number(-list.at(i).toDouble()));
+                    this->ui->Pmin_14->setText(QString::number(list.at(i).toDouble()));
+                    this->ui->comboBox_range14->setCurrentIndex(getIndexFromRange(list.at(i).toDouble()));
+                }else{
+                    ui->Pmax_14->setText(tr(""));
+                    ui->Pmin_14->setText(tr(""));
+                }
+                break;
+            case 14:
+                if(list.at(i) != "-"){
+                    this->ui->Pmax_15->setText(QString::number(-list.at(i).toDouble()));
+                    this->ui->Pmin_15->setText(QString::number(list.at(i).toDouble()));
+                    this->ui->comboBox_range15->setCurrentIndex(getIndexFromRange(list.at(i).toDouble()));
+                }else{
+                    ui->Pmax_15->setText(tr(""));
+                    ui->Pmin_15->setText(tr(""));
+                }
+                break;
+            case 15:
+                if(list.at(i) != "-"){
+                    this->ui->Pmax_16->setText(QString::number(-list.at(i).toDouble()));
+                    this->ui->Pmin_16->setText(QString::number(list.at(i).toDouble()));
+                    this->ui->comboBox_range16->setCurrentIndex(getIndexFromRange(list.at(i).toDouble()));
+                }else{
+                    ui->Pmax_16->setText(tr(""));
+                    ui->Pmin_16->setText(tr(""));
+                }
+                break;
+            }
         }
-        else ui->Pmin_1->setText(tr(""));
-        if(list.at(1) != "-" ){
-            if(list.at(1).toDouble() == -1000) ui->Pbtn_21->setChecked(true);
-            else if(list.at(1).toDouble() == -5000) ui->Pbtn_22->setChecked(true);
-            else if(list.at(1).toDouble() == -10000) ui->Pbtn_23->setChecked(true);
-            pMainWindow->PminList[1] = list.at(1).toDouble();
-            pMainWindow->PmaxList[1] = - pMainWindow->PminList[1] ;
-
-            ui->Pmin_2->setText(list.at(1));
-        }
-        else ui->Pmin_2->setText(tr(""));
-        if(list.at(2) != "-" ){
-            if(list.at(2).toDouble() == -1000) ui->Pbtn_31->setChecked(true);
-            else if(list.at(2).toDouble() == -5000) ui->Pbtn_32->setChecked(true);
-            else if(list.at(2).toDouble() == -10000) ui->Pbtn_33->setChecked(true);
-            pMainWindow->PminList[2] = list.at(2).toDouble();
-            pMainWindow->PmaxList[2] = - pMainWindow->PminList[2] ;
-
-            ui->Pmin_3->setText(list.at(2));
-        }
-        else ui->Pmin_3->setText(tr(""));
-        if(list.at(3) != "-" ){
-            if(list.at(3).toDouble() == -1000) ui->Pbtn_41->setChecked(true);
-            else if(list.at(3).toDouble() == -5000) ui->Pbtn_42->setChecked(true);
-            else if(list.at(3).toDouble() == -10000) ui->Pbtn_43->setChecked(true);
-            pMainWindow->PminList[3] = list.at(3).toDouble();
-            pMainWindow->PmaxList[3] = - pMainWindow->PminList[3] ;
-
-            ui->Pmin_4->setText(list.at(3));
-        }
-        else ui->Pmin_4->setText(tr(""));
-
-        if(list.at(4) != "-" ) {
-            if(list.at(4).toDouble() == -1000) ui->Pbtn_51->setChecked(true);
-            else if(list.at(4).toDouble() == -5000) ui->Pbtn_52->setChecked(true);
-            else if(list.at(4).toDouble() == -10000) ui->Pbtn_53->setChecked(true);
-            pMainWindow->PminList[4] = list.at(4).toDouble();
-            pMainWindow->PmaxList[4] = - pMainWindow->PminList[4] ;
-
-            ui->Pmin_5->setText(list.at(4));
-        }
-        else ui->Pmin_5->setText(tr(""));
-        if(list.at(5) != "-" ){
-            if(list.at(5).toDouble() == -1000) ui->Pbtn_61->setChecked(true);
-            else if(list.at(5).toDouble() == -5000) ui->Pbtn_62->setChecked(true);
-            else if(list.at(5).toDouble() == -10000) ui->Pbtn_63->setChecked(true);
-            pMainWindow->PminList[5] = list.at(5).toDouble();
-            pMainWindow->PmaxList[5] = - pMainWindow->PminList[5] ;
-
-            ui->Pmin_6->setText(list.at(5));
-        }
-        else ui->Pmin_6->setText(tr(""));
-        if(list.at(6) != "-" ) {
-            if(list.at(6).toDouble() == -1000) ui->Pbtn_71->setChecked(true);
-            else if(list.at(6).toDouble() == -5000) ui->Pbtn_72->setChecked(true);
-            else if(list.at(6).toDouble() == -10000) ui->Pbtn_73->setChecked(true);
-            pMainWindow->PminList[6] = list.at(6).toDouble();
-            pMainWindow->PmaxList[6] = - pMainWindow->PminList[6] ;
-
-            ui->Pmin_7->setText(list.at(6));
-        }
-        else ui->Pmin_7->setText(tr(""));
-        if(list.at(7) != "-" ) {
-            if(list.at(7).toDouble() == -1000) ui->Pbtn_81->setChecked(true);
-            else if(list.at(7).toDouble() == -5000) ui->Pbtn_82->setChecked(true);
-            else if(list.at(7).toDouble() == -10000) ui->Pbtn_83->setChecked(true);
-            pMainWindow->PminList[7] = list.at(7).toDouble();
-            pMainWindow->PmaxList[7] = - pMainWindow->PminList[7] ;
-
-            ui->Pmin_8->setText(list.at(7));
-        }
-        else ui->Pmin_8->setText(tr(""));
-
-        if(list.at(8) != "-" ){
-            if(list.at(8).toDouble() == -1000) ui->Pbtn_91->setChecked(true);
-            else if(list.at(8).toDouble() == -5000) ui->Pbtn_92->setChecked(true);
-            else if(list.at(8).toDouble() == -10000) ui->Pbtn_93->setChecked(true);
-            pMainWindow->PminList[8] = list.at(8).toDouble();
-            pMainWindow->PmaxList[8] = - pMainWindow->PminList[8] ;
-
-            ui->Pmin_9->setText(list.at(8));
-        }
-        else ui->Pmin_9->setText(tr(""));
-        if(list.at(9) != "-" ) {
-            if(list.at(9).toDouble() == -1000) ui->Pbtn_a1->setChecked(true);
-            else if(list.at(9).toDouble() == -5000) ui->Pbtn_a2->setChecked(true);
-            else if(list.at(9).toDouble() == -10000) ui->Pbtn_a3->setChecked(true);
-            pMainWindow->PminList[9] = list.at(9).toDouble();
-            pMainWindow->PmaxList[9] = - pMainWindow->PminList[9] ;
-
-            ui->Pmin_10->setText(list.at(9));
-        }
-        else ui->Pmin_10->setText(tr(""));
-        if(list.at(10) != "-" ) {
-            if(list.at(10).toDouble() == -1000) ui->Pbtn_b1->setChecked(true);
-            else if(list.at(10).toDouble() == -5000) ui->Pbtn_b2->setChecked(true);
-            else if(list.at(10).toDouble() == -10000) ui->Pbtn_b3->setChecked(true);
-            pMainWindow->PminList[10] = list.at(10).toDouble();
-            pMainWindow->PmaxList[10] = - pMainWindow->PminList[10] ;
-
-            ui->Pmin_11->setText(list.at(10));
-        }
-        else ui->Pmin_11->setText(tr(""));
-        if(list.at(11) != "-" ) {
-            if(list.at(11).toDouble() == -1000) ui->Pbtn_c1->setChecked(true);
-            else if(list.at(11).toDouble() == -5000) ui->Pbtn_c2->setChecked(true);
-            else if(list.at(11).toDouble() == -10000) ui->Pbtn_c3->setChecked(true);
-            pMainWindow->PminList[11] = list.at(11).toDouble();
-            pMainWindow->PmaxList[11] = - pMainWindow->PminList[11] ;
-
-            ui->Pmin_12->setText(list.at(11));
-        }
-        else ui->Pmin_12->setText(tr(""));
-
-        if(list.at(12) != "-" ) {
-            if(list.at(12).toDouble() == -1000) ui->Pbtn_d1->setChecked(true);
-            else if(list.at(12).toDouble() == -5000) ui->Pbtn_d2->setChecked(true);
-            else if(list.at(12).toDouble() == -10000) ui->Pbtn_d3->setChecked(true);
-            pMainWindow->PminList[12] = list.at(12).toDouble();
-            pMainWindow->PmaxList[12] = - pMainWindow->PminList[12] ;
-
-            ui->Pmin_13->setText(list.at(12));
-        }
-        else ui->Pmin_13->setText(tr(""));
-        if(list.at(13) != "-" ){
-            if(list.at(13).toDouble() == -1000) ui->Pbtn_e1->setChecked(true);
-            else if(list.at(13).toDouble() == -5000) ui->Pbtn_e2->setChecked(true);
-            else if(list.at(13).toDouble() == -10000) ui->Pbtn_e3->setChecked(true);
-            pMainWindow->PminList[13] = list.at(13).toDouble();
-            pMainWindow->PmaxList[13] = - pMainWindow->PminList[13] ;
-
-            ui->Pmin_14->setText(list.at(13));
-        }
-        else ui->Pmin_14->setText(tr(""));
-        if(list.at(14) != "-" ) {
-            if(list.at(14).toDouble() == -1000) ui->Pbtn_f1->setChecked(true);
-            else if(list.at(14).toDouble() == -5000) ui->Pbtn_f2->setChecked(true);
-            else if(list.at(14).toDouble() == -10000) ui->Pbtn_f3->setChecked(true);
-            pMainWindow->PminList[14] = list.at(14).toDouble();
-            pMainWindow->PmaxList[14] = - pMainWindow->PminList[14] ;
-
-            ui->Pmin_15->setText(list.at(14));
-        }
-        else ui->Pmin_15->setText(tr(""));
-        if(list.at(15) != "-" ) {
-            if(list.at(15).toDouble() == -1000) ui->Pbtn_g1->setChecked(true);
-            else if(list.at(15).toDouble() == -5000) ui->Pbtn_g2->setChecked(true);
-            else if(list.at(15).toDouble() == -10000) ui->Pbtn_g3->setChecked(true);
-            pMainWindow->PminList[15] = list.at(15).toDouble();
-            pMainWindow->PmaxList[15] = - pMainWindow->PminList[15] ;
-
-            ui->Pmin_16->setText(list.at(15));
-        }
-        else ui->Pmin_16->setText(tr(""));
-
-    }else{
-        if(list.at(0) != "-" ) ui->Pmax_1->setText(list.at(0));
-        else ui->Pmax_1->setText(tr(""));
-        if(list.at(1) != "-" ) ui->Pmax_2->setText(list.at(1));
-        else ui->Pmax_2->setText(tr(""));
-        if(list.at(2) != "-" ) ui->Pmax_3->setText(list.at(2));
-        else ui->Pmax_3->setText(tr(""));
-        if(list.at(3) != "-" ) ui->Pmax_4->setText(list.at(3));
-        else ui->Pmax_4->setText(tr(""));
-
-        if(list.at(4) != "-" ) ui->Pmax_5->setText(list.at(4));
-        else ui->Pmax_5->setText(tr(""));
-        if(list.at(5) != "-" ) ui->Pmax_6->setText(list.at(5));
-        else ui->Pmax_6->setText(tr(""));
-        if(list.at(6) != "-" ) ui->Pmax_7->setText(list.at(6));
-        else ui->Pmax_7->setText(tr(""));
-        if(list.at(7) != "-" ) ui->Pmax_8->setText(list.at(7));
-        else ui->Pmax_8->setText(tr(""));
-
-        if(list.at(8) != "-" ) ui->Pmax_9->setText(list.at(8));
-        else ui->Pmax_9->setText(tr(""));
-        if(list.at(9) != "-" ) ui->Pmax_10->setText(list.at(9));
-        else ui->Pmax_10->setText(tr(""));
-        if(list.at(10) != "-" ) ui->Pmax_11->setText(list.at(10));
-        else ui->Pmax_11->setText(tr(""));
-        if(list.at(11) != "-") ui->Pmax_12->setText(list.at(11));
-        else ui->Pmax_12->setText(tr(""));
-
-        if(list.at(12) != "-" ) ui->Pmax_13->setText(list.at(12));
-        else ui->Pmax_13->setText(tr(""));
-        if(list.at(13) != "-" ) ui->Pmax_14->setText(list.at(13));
-        else ui->Pmax_14->setText(tr(""));
-        if(list.at(14) != "-" ) ui->Pmax_15->setText(list.at(14));
-        else ui->Pmax_15->setText(tr(""));
-        if(list.at(15) != "-") ui->Pmax_16->setText(list.at(15));
-        else ui->Pmax_16->setText(tr(""));
     }
-}*/
+}
 // 辅助函数 -- 读取压强
 void Dialog::help_readP(){
     // 读取压强
@@ -1607,9 +1594,16 @@ void Dialog::on_comboBox_SaveDataDynamic_activated(const QString &str)
     if(str == "手动保存"){
         ui->pushButton_selectFile->setEnabled(false);
         ui->lineEdit_file4save->setEnabled(false);
+        ui->pushButton_selectFile->hide();
+        ui->lineEdit_file4save->hide();
+        ui->label_29->hide();
+
     }else{
         ui->pushButton_selectFile->setEnabled(true);
         ui->lineEdit_file4save->setEnabled(true);
+        ui->pushButton_selectFile->show();
+        ui->lineEdit_file4save->show();
+        ui->label_29->show();
     }
 }
 // 选择通道
