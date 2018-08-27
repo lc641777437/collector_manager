@@ -200,7 +200,38 @@ Dialog::Dialog(QWidget *parent, unsigned char devIDH, unsigned char devIDL, unsi
             // 5,设置标定系数
             h = steam.readLine();
             qDebug()<<"(dialog.cpp)标定系数:"<<h;
-            this->ui->lineEdit_biaoding->setText(h);
+            //this->ui->lineEdit_biaoding->setText(h);
+            QStringList list = h.split(",");
+            if(list.at(0).toDouble() < 0.001){
+                pMainWindow->coefficient1 = 1.0;
+            }else{
+                pMainWindow->coefficient1 = list.at(0).toDouble();
+            }
+            if(list.at(1).toDouble() < 0.001){
+                pMainWindow->coefficient2 = 1.0;
+            }else{
+                pMainWindow->coefficient2 = list.at(1).toDouble();
+            }
+            if(list.at(2).toDouble() < 0.001){
+                pMainWindow->coefficient3 = 1.0;
+            }else{
+                pMainWindow->coefficient3 = list.at(2).toDouble();
+            }
+            if(list.at(3).toDouble() < 0.001){
+                pMainWindow->coefficient4 = 1.0;
+            }else{
+                pMainWindow->coefficient4 = list.at(3).toDouble();
+            }
+            if(list.at(4).toDouble() < 0.001){
+                pMainWindow->coefficient5 = 1.0;
+            }else{
+                pMainWindow->coefficient5 = list.at(4).toDouble();
+            }
+            this->ui->lineEdit_coefficient1->setText(QString::number(pMainWindow->coefficient1, 10, 4));
+            this->ui->lineEdit_coefficient1->setText(QString::number(pMainWindow->coefficient2, 10, 4));
+            this->ui->lineEdit_coefficient1->setText(QString::number(pMainWindow->coefficient3, 10, 4));
+            this->ui->lineEdit_coefficient1->setText(QString::number(pMainWindow->coefficient4, 10, 4));
+            this->ui->lineEdit_coefficient1->setText(QString::number(pMainWindow->coefficient5, 10, 4));
 
             // 6,7,设置压强
             h = steam.readLine();
@@ -225,7 +256,7 @@ Dialog::Dialog(QWidget *parent, unsigned char devIDH, unsigned char devIDL, unsi
             // 8,设置通道数
             h = steam.readLine();
             qDebug()<<"(dialog.cpp)通道数:"<<h;
-            QStringList list = h.split(",");
+            list = h.split(",");
             bool tmp[16] = {false};
             for(int i = 0;i<16;i++){
                 if(list.at(i).toInt() == 0){
@@ -258,7 +289,12 @@ Dialog::Dialog(QWidget *parent, unsigned char devIDH, unsigned char devIDL, unsi
             // 4,设置密度
             this->ui->lineEdit_Density->setText(tr("1"));
             // 5,设置标定系数
-            this->ui->lineEdit_biaoding->setText(tr("1"));
+            this->ui->lineEdit_coefficient1->setText(tr("1"));
+            this->ui->lineEdit_coefficient2->setText(tr("1"));
+            this->ui->lineEdit_coefficient3->setText(tr("1"));
+            this->ui->lineEdit_coefficient4->setText(tr("1"));
+            this->ui->lineEdit_coefficient5->setText(tr("1"));
+
             // 6,7,设置压强
             //this->ui->lineEdit_Pmax->setText(tr("2000"));
             //this->ui->lineEdit_Pmin->setText(tr("-2000"));
@@ -287,7 +323,12 @@ Dialog::Dialog(QWidget *parent, unsigned char devIDH, unsigned char devIDL, unsi
         // 4,设置密度
         this->ui->lineEdit_Density->setText(tr("1"));
         // 5,设置标定系数
-        this->ui->lineEdit_biaoding->setText(tr("1"));
+        this->ui->lineEdit_coefficient1->setText(tr("1"));
+        this->ui->lineEdit_coefficient2->setText(tr("1"));
+        this->ui->lineEdit_coefficient3->setText(tr("1"));
+        this->ui->lineEdit_coefficient4->setText(tr("1"));
+        this->ui->lineEdit_coefficient5->setText(tr("1"));
+
         // 6,7, 设置压强
         //this->ui->lineEdit_Pmax->setText(tr("2000"));
         //this->ui->lineEdit_Pmin->setText(tr("-2000"));
@@ -541,23 +582,23 @@ bool Dialog::help_saveParam(){
    // this->ProjectID = this->ui->lineEdit_projectID->text();
     this->proId = this->ui->lineEdit_projectID->text();
 
-    // 5,读取服务器地址, 为空默认不设置
-    if(this->ui->lineEdit_serverAddr->text() != ""){
-        if(pMainWindow->connectType == CONNECT_SERIAL || pMainWindow->connectType == CONNECT_SOCKET){
-            QString server = this->ui->lineEdit_serverAddr->text();
-            qDebug()<<"(dialog.cpp)"<<QString("SetServer: " + server + "\r\n");
-            // QByteArray message;
-            message.append(QString("SetServer" + server + "\r\n"));
-            // 下发命令SetServer: 设置服务器.
-            if(pMainWindow->connectType == CONNECT_SERIAL){
-                pMainWindow->uart_thread->my_serialport->write(message);
-                pMainWindow->uart_thread->timer->start(TIMEOUTTIME);
-            }else if(pMainWindow->connectType == CONNECT_SOCKET){
-                pMainWindow->tcpclient_thread->socket->write(message);
-                pMainWindow->tcpclient_thread->timer->start(TIMEOUTTIME);
-            }
-        }
-    }
+//    // 5,读取服务器地址, 为空默认不设置
+//    if(this->ui->lineEdit_serverAddr->text() != ""){
+//        if(pMainWindow->connectType == CONNECT_SERIAL || pMainWindow->connectType == CONNECT_SOCKET){
+//            QString server = this->ui->lineEdit_serverAddr->text();
+//            qDebug()<<"(dialog.cpp)"<<QString("SetServer" + server + "\r\n");
+//            // QByteArray message;
+//            message.append(QString("SetServer" + server + "\r\n"));
+//            // 下发命令SetServer: 设置服务器.
+//            if(pMainWindow->connectType == CONNECT_SERIAL){
+//                pMainWindow->uart_thread->my_serialport->write(message);
+//                pMainWindow->uart_thread->timer->start(TIMEOUTTIME);
+//            }else if(pMainWindow->connectType == CONNECT_SOCKET){
+//                pMainWindow->tcpclient_thread->socket->write(message);
+//                pMainWindow->tcpclient_thread->timer->start(TIMEOUTTIME);
+//            }
+//        }
+//    }
 
     // 6,读取设置的 采样频率
     this->pFre = ui->comboBox_SampleRte->currentText().toInt();
@@ -594,11 +635,21 @@ bool Dialog::help_saveParam(){
     pMainWindow->Density = ui->lineEdit_Density->text().toDouble();
 
     // 12,读取设置的标定系数
-    if(ui->lineEdit_biaoding->text() == ""){
+    if(ui->lineEdit_coefficient1->text() == "" ||
+       ui->lineEdit_coefficient2->text() == "" ||
+       ui->lineEdit_coefficient3->text() == "" ||
+       ui->lineEdit_coefficient4->text() == "" ||
+       ui->lineEdit_coefficient5->text() == ""){
         QMessageBox::information(this, tr("采集分析软件"), tr("标定系数设置不能为空!\n"));
         return false;
     }
-    pMainWindow->e = ui->lineEdit_biaoding->text().toDouble();
+    //pMainWindow->e = ui->lineEdit_biaoding->text().toDouble();
+    pMainWindow->coefficient1 = ui->lineEdit_coefficient1->text().toDouble();
+    pMainWindow->coefficient2 = ui->lineEdit_coefficient2->text().toDouble();
+    pMainWindow->coefficient3 = ui->lineEdit_coefficient3->text().toDouble();
+    pMainWindow->coefficient4 = ui->lineEdit_coefficient4->text().toDouble();
+    pMainWindow->coefficient5 = ui->lineEdit_coefficient5->text().toDouble();
+
 
     // 13,读取设置的Pmax,Pmin
     if(isSelected[0]){
@@ -977,7 +1028,7 @@ bool Dialog::help_saveParam(){
     steam<<tmpPeriod<<endl;                  // 2,写入自动保存间隔 或 手动保存
     steam<<pMainWindow->AutoSaveFile<<endl;  // 3,写入自动保存路径
     steam<<pMainWindow->Density<<endl;       // 4,写入密度
-    steam<<pMainWindow->e<<endl;             // 5,写入标定系数e
+    steam<<pMainWindow->coefficient1<<","<<pMainWindow->coefficient2<<","<<pMainWindow->coefficient3<<","<<pMainWindow->coefficient4<<","<<pMainWindow->coefficient5<<endl;
     for(int i = 0;i < 16; i++){              // 6,写入Pmax
         if(isSelected[i])
             steam<<pMainWindow->PmaxList[i]<<",";
@@ -1336,7 +1387,12 @@ void Dialog::on_pushButton_readH0_clicked()
    if(cnt>0){
 
       // 读取最新设置的参数值:密度,Pmax,Pmin,标记系数
-      pMainWindow->e = ui->lineEdit_biaoding->text().toDouble();
+        pMainWindow->coefficient1 = ui->lineEdit_coefficient1->text().toDouble();
+        pMainWindow->coefficient2 = ui->lineEdit_coefficient2->text().toDouble();
+        pMainWindow->coefficient3 = ui->lineEdit_coefficient3->text().toDouble();
+        pMainWindow->coefficient4 = ui->lineEdit_coefficient4->text().toDouble();
+        pMainWindow->coefficient5 = ui->lineEdit_coefficient5->text().toDouble();
+
       pMainWindow->Density = ui->lineEdit_Density->text().toDouble();
       // 读取压强
       help_readP();
@@ -1358,7 +1414,11 @@ void Dialog::handlerTimerOut(){         // 定时器处理函数
                // 读取密度
                pMainWindow->Density = ui->lineEdit_Density->text().toDouble();
                // 读取标定系数
-               pMainWindow->e = ui->lineEdit_biaoding->text().toDouble();
+               pMainWindow->coefficient1 = ui->lineEdit_coefficient1->text().toDouble();
+               pMainWindow->coefficient2 = ui->lineEdit_coefficient2->text().toDouble();
+               pMainWindow->coefficient3 = ui->lineEdit_coefficient3->text().toDouble();
+               pMainWindow->coefficient4 = ui->lineEdit_coefficient4->text().toDouble();
+               pMainWindow->coefficient5 = ui->lineEdit_coefficient5->text().toDouble();
                // 读取压强
                help_readP();
 
@@ -2284,5 +2344,28 @@ void Dialog::on_comboBox_range16_currentTextChanged(const QString &arg1)
     } else if(arg1 == "10K"){
         this->ui->Pmax_16->setText(QString::number(10000));
         this->ui->Pmin_16->setText(QString::number(-10000));
+    }
+}
+
+void Dialog::on_pushButton_changeServer_clicked()
+{
+    // 5,读取服务器地址, 为空默认不设置
+    if(this->ui->lineEdit_serverAddr->text() != ""){
+        if(pMainWindow->connectType == CONNECT_SERIAL || pMainWindow->connectType == CONNECT_SOCKET){
+            QString server = this->ui->lineEdit_serverAddr->text();
+            QByteArray message;
+            message.append(QString("SetServer" + server + "\r\n"));
+            qDebug()<<"(dialog.cpp)"<<message;
+            // 下发命令SetServer: 设置服务器.
+            if(pMainWindow->connectType == CONNECT_SERIAL){
+                pMainWindow->uart_thread->my_serialport->write(message);
+                pMainWindow->uart_thread->timer->start(TIMEOUTTIME);
+            }else if(pMainWindow->connectType == CONNECT_SOCKET){
+                pMainWindow->tcpclient_thread->socket->write(message);
+                pMainWindow->tcpclient_thread->timer->start(TIMEOUTTIME);
+            }
+        }
+    }else{
+        QMessageBox::information(this, tr("采集分析软件"), tr("请输入服务器地址\n"));
     }
 }

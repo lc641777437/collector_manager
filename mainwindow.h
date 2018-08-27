@@ -71,7 +71,14 @@ public:
     TcpClientThread *tcpclient_thread;
 
     // 新添加变量
-    double Density,e;
+    double Density;
+    double e;
+    double coefficient1;
+    double coefficient2;
+    double coefficient3;
+    double coefficient4;
+    double coefficient5;
+
     double AutoSavePeriod;
     QString AutoSaveFile;
     double H[20];

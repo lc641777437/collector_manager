@@ -152,6 +152,7 @@ private slots:
     void on_comboBox_range14_currentTextChanged(const QString &arg1);
     void on_comboBox_range15_currentTextChanged(const QString &arg1);
     void on_comboBox_range16_currentTextChanged(const QString &arg1);
+    void on_pushButton_changeServer_clicked();
 };
 
 #endif // DIALOG_H

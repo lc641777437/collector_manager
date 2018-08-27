@@ -1399,9 +1399,9 @@
   <widget class="QLineEdit" name="lineEdit_Density">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>390</y>
-     <width>91</width>
+     <x>30</x>
+     <y>430</y>
+     <width>81</width>
      <height>20</height>
     </rect>
    </property>
@@ -1825,10 +1825,10 @@
   <widget class="QPushButton" name="pushButton_Reset_2">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>452</y>
-     <width>191</width>
-     <height>61</height>
+     <x>240</x>
+     <y>460</y>
+     <width>221</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="font">
@@ -1881,7 +1881,7 @@
   <widget class="QLabel" name="label_40">
    <property name="geometry">
     <rect>
-     <x>270</x>
+     <x>230</x>
      <y>390</y>
      <width>91</width>
      <height>21</height>
@@ -1902,12 +1902,12 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_biaoding">
+  <widget class="QLineEdit" name="lineEdit_coefficient1">
    <property name="geometry">
     <rect>
-     <x>370</x>
-     <y>390</y>
-     <width>91</width>
+     <x>150</x>
+     <y>430</y>
+     <width>51</width>
      <height>20</height>
     </rect>
    </property>
@@ -1915,10 +1915,10 @@
   <widget class="QPushButton" name="pushButton_saveParam">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>450</y>
+     <x>30</x>
+     <y>460</y>
      <width>191</width>
-     <height>61</height>
+     <height>41</height>
     </rect>
    </property>
    <property name="font">
@@ -3141,6 +3141,70 @@
      </property>
     </item>
    </widget>
+  </widget>
+  <widget class="QPushButton" name="pushButton_changeServer">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>510</y>
+     <width>431</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Agency FB</family>
+     <pointsize>18</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="inputMethodHints">
+    <set>Qt::ImhNone</set>
+   </property>
+   <property name="text">
+    <string>更改服务器</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_coefficient2">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>430</y>
+     <width>51</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_coefficient3">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>430</y>
+     <width>51</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_coefficient4">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>430</y>
+     <width>51</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_coefficient5">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>430</y>
+     <width>51</width>
+     <height>21</height>
+    </rect>
+   </property>
   </widget>
  </widget>
  <resources/>

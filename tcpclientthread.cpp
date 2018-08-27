@@ -92,7 +92,6 @@ void TcpClientThread::socketreadyread()
                     event->setModal(true);
                     event->show();
                     qDebug()<<"(tcpclientthread.cpp)参数设置对话框"<<endl;
-
                 }
                 // 设备回复 "开始采集"
                 else if(CommandData[2] == CMD_SEND_START){
@@ -143,7 +142,7 @@ void TcpClientThread::socketreadyread()
         int i = 0;
         // 读取数据：每次读取4+16*3=52个字节
         ReadData.append(socket->readAll());
-        qDebug()<<endl<<endl<<"(tcpclientthread.cpp)============== 设备 回复数据: ==========="<<endl<<endl;
+        qDebug()<<endl<<endl<<"(tcpclientthread.cpp)============== 设备 回复数据: ==========="<<endl;
         // 寻找数据开始点: 0xA5 0xA5
         while(1){//remove the nothing header
             if(i >= ReadData.length()){
@@ -224,17 +223,77 @@ void TcpClientThread::ADValue_proc(QByteArray &ReadBuf)
 
         // 计算H值
         double tmp = tmpData;
-        tmp = (tmp*pMainWindow->e/393216.0 - 4)/16.0*(pMainWindow->PmaxList[i] - pMainWindow->PminList[i])
+        if(tmp/7864320.0 > 5){
+            tmp = (tmp - 1572864.0*5)*1.0 +
+                    1572864.0*pMainWindow->coefficient5 +
+                    1572864.0*pMainWindow->coefficient4 +
+                    1572864.0*pMainWindow->coefficient3 +
+                    1572864.0*pMainWindow->coefficient2 +
+                    1572864.0*pMainWindow->coefficient1;
+        }else if(tmp/7864320.0 > 4){
+            tmp = (tmp - 1572864.0*4)*pMainWindow->coefficient5 +
+                    1572864.0*pMainWindow->coefficient4 +
+                    1572864.0*pMainWindow->coefficient3 +
+                    1572864.0*pMainWindow->coefficient2 +
+                    1572864.0*pMainWindow->coefficient1;
+        }else if(tmp/7864320.0 > 3){
+            tmp = (tmp - 1572864.0*3)*pMainWindow->coefficient4 +
+                    1572864.0*pMainWindow->coefficient3 +
+                    1572864.0*pMainWindow->coefficient2 +
+                    1572864.0*pMainWindow->coefficient1;
+        }else if(tmp/7864320.0 > 2){
+            tmp = (tmp - 1572864.0*2)*pMainWindow->coefficient3 +
+                    1572864.0*pMainWindow->coefficient2 +
+                    1572864.0*pMainWindow->coefficient1;
+        }else if(tmp/7864320.0 > 1){
+            tmp = (tmp - 1572864.0*1)*pMainWindow->coefficient2 +
+                    1572864.0*pMainWindow->coefficient1;
+        }else{
+            tmp = (tmp - 1572864.0*0)*pMainWindow->coefficient1;
+        }
+        tmp = (tmp/393216.0 - 4)/16.0*(pMainWindow->PmaxList[i] - pMainWindow->PminList[i])
                   + pMainWindow->PminList[i];
         data[i] = tmp / (9.8 * pMainWindow->Density);
         // 保存初始H值
         if(pMainWindow->readInitialValue){
-            if(pMainWindow->H[i] == 0) pMainWindow->H[i] = data[i];
-            else  pMainWindow->H[i] = ( pMainWindow->H[i] + data[i] ) / 2.0;
+            if(pMainWindow->H[i] == 0) {
+                pMainWindow->H[i] = data[i];
+            }
+            else{
+                pMainWindow->H[i] = ( pMainWindow->H[i] + data[i] ) / 2.0;
+            }
         }
         // 计算电压值
         tmp = tmpData;
-        V[i] = tmp * pMainWindow->e / 786432;
+        if(tmp/7864320.0 > 5){
+            tmp = (tmp - 1572864.0*5)*1.0 +
+                    1572864.0*pMainWindow->coefficient5 +
+                    1572864.0*pMainWindow->coefficient4 +
+                    1572864.0*pMainWindow->coefficient3 +
+                    1572864.0*pMainWindow->coefficient2 +
+                    1572864.0*pMainWindow->coefficient1;
+        }else if(tmp/7864320.0 > 4){
+            tmp = (tmp - 1572864.0*4)*pMainWindow->coefficient5 +
+                    1572864.0*pMainWindow->coefficient4 +
+                    1572864.0*pMainWindow->coefficient3 +
+                    1572864.0*pMainWindow->coefficient2 +
+                    1572864.0*pMainWindow->coefficient1;
+        }else if(tmp/7864320.0 > 3){
+            tmp = (tmp - 1572864.0*3)*pMainWindow->coefficient4 +
+                    1572864.0*pMainWindow->coefficient3 +
+                    1572864.0*pMainWindow->coefficient2 +
+                    1572864.0*pMainWindow->coefficient1;
+        }else if(tmp/7864320.0 > 2){
+            tmp = (tmp - 1572864.0*2)*pMainWindow->coefficient3 +
+                    1572864.0*pMainWindow->coefficient2 +
+                    1572864.0*pMainWindow->coefficient1;
+        }else if(tmp/7864320.0 > 1){
+            tmp = (tmp - 1572864.0*1)*pMainWindow->coefficient2 +
+                    1572864.0*pMainWindow->coefficient1;
+        }else{
+            tmp = (tmp - 1572864.0*0)*pMainWindow->coefficient1;
+        }
+        V[i] = tmp / 786432;
     }
     if(pMainWindow->readInitialValue == false){
             // 计算挠度值
