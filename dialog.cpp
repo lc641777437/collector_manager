@@ -228,10 +228,10 @@ Dialog::Dialog(QWidget *parent, unsigned char devIDH, unsigned char devIDL, unsi
                 pMainWindow->coefficient5 = list.at(4).toDouble();
             }
             this->ui->lineEdit_coefficient1->setText(QString::number(pMainWindow->coefficient1, 10, 4));
-            this->ui->lineEdit_coefficient1->setText(QString::number(pMainWindow->coefficient2, 10, 4));
-            this->ui->lineEdit_coefficient1->setText(QString::number(pMainWindow->coefficient3, 10, 4));
-            this->ui->lineEdit_coefficient1->setText(QString::number(pMainWindow->coefficient4, 10, 4));
-            this->ui->lineEdit_coefficient1->setText(QString::number(pMainWindow->coefficient5, 10, 4));
+            this->ui->lineEdit_coefficient2->setText(QString::number(pMainWindow->coefficient2, 10, 4));
+            this->ui->lineEdit_coefficient3->setText(QString::number(pMainWindow->coefficient3, 10, 4));
+            this->ui->lineEdit_coefficient4->setText(QString::number(pMainWindow->coefficient4, 10, 4));
+            this->ui->lineEdit_coefficient5->setText(QString::number(pMainWindow->coefficient5, 10, 4));
 
             // 6,7,设置压强
             h = steam.readLine();
@@ -384,7 +384,13 @@ Dialog::Dialog(QWidget *parent, unsigned char devIDH, unsigned char devIDL, unsi
      // 定时1分钟读取数据
      oneMinuteTimer = new QTimer(this);
      connect(oneMinuteTimer,SIGNAL(timeout()),this,SLOT(handlerTimerOut()));
-     msgBox = new QMessageBox(QMessageBox::Information, tr("采集分析软件"),"");
+     msgBox = new QMessageBox();
+     //QMessageBox msgBox;
+     msgBox->setText("采集分析软件");
+     msgBox->setStandardButtons(0);
+
+
+     //msgBox.exec();
      cnt = 20;      //  20s to read the initial H value;
 }
 Dialog::~Dialog()
@@ -1410,6 +1416,7 @@ void Dialog::on_pushButton_readH0_clicked()
 void Dialog::handlerTimerOut(){         // 定时器处理函数
      if(cnt > 0){
           // (1)发送命令字
+         msgBox->setStandardButtons(QMessageBox::NoButton);
           if(cnt == 20 && pMainWindow->connectType == CONNECT_SOCKET) {
                // 读取密度
                pMainWindow->Density = ui->lineEdit_Density->text().toDouble();
@@ -1433,6 +1440,7 @@ void Dialog::handlerTimerOut(){         // 定时器处理函数
           msgBox->setInformativeText(str);
      }
      else{
+         msgBox->setStandardButtons(QMessageBox::Ok);
          msgBox->close();
          oneMinuteTimer->stop();
          pMainWindow->tcpclient_thread->socket->write("StopToSend\r\n");
