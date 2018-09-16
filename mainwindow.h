@@ -78,6 +78,11 @@ public:
     double coefficient3;
     double coefficient4;
     double coefficient5;
+    double coefficient6;
+    double coefficient7;
+    double coefficient8;
+    double coefficient9;
+    double coefficient10;
 
     double AutoSavePeriod;
     QString AutoSaveFile;

@@ -222,35 +222,53 @@ void TcpClientThread::ADValue_proc(QByteArray &ReadBuf)
         }
 
         // 计算H值
-        double tmp = tmpData;
-        if(tmp/7864320.0 > 5){
-            tmp = (tmp - 1572864.0*5)*1.0 +
-                    1572864.0*pMainWindow->coefficient5 +
-                    1572864.0*pMainWindow->coefficient4 +
-                    1572864.0*pMainWindow->coefficient3 +
-                    1572864.0*pMainWindow->coefficient2 +
-                    1572864.0*pMainWindow->coefficient1;
-        }else if(tmp/7864320.0 > 4){
-            tmp = (tmp - 1572864.0*4)*pMainWindow->coefficient5 +
-                    1572864.0*pMainWindow->coefficient4 +
-                    1572864.0*pMainWindow->coefficient3 +
-                    1572864.0*pMainWindow->coefficient2 +
-                    1572864.0*pMainWindow->coefficient1;
-        }else if(tmp/7864320.0 > 3){
-            tmp = (tmp - 1572864.0*3)*pMainWindow->coefficient4 +
-                    1572864.0*pMainWindow->coefficient3 +
-                    1572864.0*pMainWindow->coefficient2 +
-                    1572864.0*pMainWindow->coefficient1;
-        }else if(tmp/7864320.0 > 2){
-            tmp = (tmp - 1572864.0*2)*pMainWindow->coefficient3 +
-                    1572864.0*pMainWindow->coefficient2 +
-                    1572864.0*pMainWindow->coefficient1;
-        }else if(tmp/7864320.0 > 1){
-            tmp = (tmp - 1572864.0*1)*pMainWindow->coefficient2 +
-                    1572864.0*pMainWindow->coefficient1;
-        }else{
-            tmp = (tmp - 1572864.0*0)*pMainWindow->coefficient1;
+        double tmp = 0;
+        double coefficient = 0.0;
+        double values = tmpData;
+        for(int i = 0; i < 10; i++){
+            double tempValue = values - i * 786432.0;
+            switch(i){
+            case 0:
+                coefficient = pMainWindow->coefficient1;
+                break;
+            case 1:
+                coefficient = pMainWindow->coefficient2;
+                break;
+            case 2:
+                coefficient = pMainWindow->coefficient3;
+                break;
+            case 3:
+                coefficient = pMainWindow->coefficient4;
+                break;
+            case 4:
+                coefficient = pMainWindow->coefficient5;
+                break;
+            case 5:
+                coefficient = pMainWindow->coefficient6;
+                break;
+            case 6:
+                coefficient = pMainWindow->coefficient7;
+                break;
+            case 7:
+                coefficient = pMainWindow->coefficient8;
+                break;
+            case 8:
+                coefficient = pMainWindow->coefficient9;
+                break;
+            case 9:
+                coefficient = pMainWindow->coefficient10;
+                break;
+            }
+
+            if(tempValue > 786432.0){
+                tmp += 786432 * coefficient;
+            } else if(tempValue > 0){
+                tmp += tempValue * coefficient;
+            } else{
+                break;
+            }
         }
+
         tmp = (tmp/393216.0 - 4)/16.0*(pMainWindow->PmaxList[i] - pMainWindow->PminList[i])
                   + pMainWindow->PminList[i];
         data[i] = tmp / (9.8 * pMainWindow->Density);
@@ -263,36 +281,7 @@ void TcpClientThread::ADValue_proc(QByteArray &ReadBuf)
                 pMainWindow->H[i] = ( pMainWindow->H[i] + data[i] ) / 2.0;
             }
         }
-        // 计算电压值
-        tmp = tmpData;
-        if(tmp/7864320.0 > 5){
-            tmp = (tmp - 1572864.0*5)*1.0 +
-                    1572864.0*pMainWindow->coefficient5 +
-                    1572864.0*pMainWindow->coefficient4 +
-                    1572864.0*pMainWindow->coefficient3 +
-                    1572864.0*pMainWindow->coefficient2 +
-                    1572864.0*pMainWindow->coefficient1;
-        }else if(tmp/7864320.0 > 4){
-            tmp = (tmp - 1572864.0*4)*pMainWindow->coefficient5 +
-                    1572864.0*pMainWindow->coefficient4 +
-                    1572864.0*pMainWindow->coefficient3 +
-                    1572864.0*pMainWindow->coefficient2 +
-                    1572864.0*pMainWindow->coefficient1;
-        }else if(tmp/7864320.0 > 3){
-            tmp = (tmp - 1572864.0*3)*pMainWindow->coefficient4 +
-                    1572864.0*pMainWindow->coefficient3 +
-                    1572864.0*pMainWindow->coefficient2 +
-                    1572864.0*pMainWindow->coefficient1;
-        }else if(tmp/7864320.0 > 2){
-            tmp = (tmp - 1572864.0*2)*pMainWindow->coefficient3 +
-                    1572864.0*pMainWindow->coefficient2 +
-                    1572864.0*pMainWindow->coefficient1;
-        }else if(tmp/7864320.0 > 1){
-            tmp = (tmp - 1572864.0*1)*pMainWindow->coefficient2 +
-                    1572864.0*pMainWindow->coefficient1;
-        }else{
-            tmp = (tmp - 1572864.0*0)*pMainWindow->coefficient1;
-        }
+
         V[i] = tmp / 786432;
     }
     if(pMainWindow->readInitialValue == false){

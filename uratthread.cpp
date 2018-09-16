@@ -173,6 +173,55 @@ void UartThread::ADValue_proc(QByteArray &ReadBuf)
         if(data[i]&0x00800000){
             data[i] = -(((~data[i])&0x00ffffff) + 1);
         }
+
+        // 计算H值
+        double tmp = 0;
+        double coefficient = 0.0;
+        double values = data[i];
+        for(int i = 0; i < 10; i++){
+            double tempValue = values - i * 786432.0;
+            switch(i){
+            case 0:
+                coefficient = pMainWindow->coefficient1;
+                break;
+            case 1:
+                coefficient = pMainWindow->coefficient2;
+                break;
+            case 2:
+                coefficient = pMainWindow->coefficient3;
+                break;
+            case 3:
+                coefficient = pMainWindow->coefficient4;
+                break;
+            case 4:
+                coefficient = pMainWindow->coefficient5;
+                break;
+            case 5:
+                coefficient = pMainWindow->coefficient6;
+                break;
+            case 6:
+                coefficient = pMainWindow->coefficient7;
+                break;
+            case 7:
+                coefficient = pMainWindow->coefficient8;
+                break;
+            case 8:
+                coefficient = pMainWindow->coefficient9;
+                break;
+            case 9:
+                coefficient = pMainWindow->coefficient10;
+                break;
+            }
+
+            if(tempValue > 786432.0){
+                tmp += 786432 * coefficient;
+            } else if(tempValue > 0){
+                tmp += tempValue * coefficient;
+            } else{
+                break;
+            }
+        }
+        data[i] = tmp;
     }
 
     if(time[time.length()-1] < MAX_SHOW_TIME){

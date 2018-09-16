@@ -199,39 +199,70 @@ Dialog::Dialog(QWidget *parent, unsigned char devIDH, unsigned char devIDL, unsi
 
             // 5,设置标定系数
             h = steam.readLine();
-            qDebug()<<"(dialog.cpp)标定系数:"<<h;
             //this->ui->lineEdit_biaoding->setText(h);
             QStringList list = h.split(",");
-            if(list.at(0).toDouble() < 0.001){
+            qDebug()<<"(dialog.cpp)标定系数:"<<h<<list.size();
+
+            if(list.size() < 1 || list.at(0).toDouble() < 0.001){
                 pMainWindow->coefficient1 = 1.0;
             }else{
                 pMainWindow->coefficient1 = list.at(0).toDouble();
             }
-            if(list.at(1).toDouble() < 0.001){
+            if(list.size() < 2 || list.at(1).toDouble() < 0.001){
                 pMainWindow->coefficient2 = 1.0;
             }else{
                 pMainWindow->coefficient2 = list.at(1).toDouble();
             }
-            if(list.at(2).toDouble() < 0.001){
+            if(list.size() < 3 || list.at(2).toDouble() < 0.001){
                 pMainWindow->coefficient3 = 1.0;
             }else{
                 pMainWindow->coefficient3 = list.at(2).toDouble();
             }
-            if(list.at(3).toDouble() < 0.001){
+            if(list.size() < 4 || list.at(3).toDouble() < 0.001){
                 pMainWindow->coefficient4 = 1.0;
             }else{
                 pMainWindow->coefficient4 = list.at(3).toDouble();
             }
-            if(list.at(4).toDouble() < 0.001){
+            if(list.size() < 5 || list.at(4).toDouble() < 0.001){
                 pMainWindow->coefficient5 = 1.0;
             }else{
                 pMainWindow->coefficient5 = list.at(4).toDouble();
+            }
+            if(list.size() < 6 || list.at(5).toDouble() < 0.001){
+                pMainWindow->coefficient6 = 1.0;
+            }else{
+                pMainWindow->coefficient6 = list.at(5).toDouble();
+            }
+            if(list.size() < 7 || list.at(6).toDouble() < 0.001){
+                pMainWindow->coefficient7 = 1.0;
+            }else{
+                pMainWindow->coefficient7 = list.at(6).toDouble();
+            }
+            if(list.size() < 8 || list.at(7).toDouble() < 0.001){
+                pMainWindow->coefficient8 = 1.0;
+            }else{
+                pMainWindow->coefficient8 = list.at(7).toDouble();
+            }
+            if(list.size() < 9 || list.at(8).toDouble() < 0.001){
+                pMainWindow->coefficient9 = 1.0;
+            }else{
+                pMainWindow->coefficient9 = list.at(8).toDouble();
+            }
+            if(list.size() < 10 || list.at(9).toDouble() < 0.001){
+                pMainWindow->coefficient10 = 1.0;
+            }else{
+                pMainWindow->coefficient10 = list.at(9).toDouble();
             }
             this->ui->lineEdit_coefficient1->setText(QString::number(pMainWindow->coefficient1, 10, 4));
             this->ui->lineEdit_coefficient2->setText(QString::number(pMainWindow->coefficient2, 10, 4));
             this->ui->lineEdit_coefficient3->setText(QString::number(pMainWindow->coefficient3, 10, 4));
             this->ui->lineEdit_coefficient4->setText(QString::number(pMainWindow->coefficient4, 10, 4));
             this->ui->lineEdit_coefficient5->setText(QString::number(pMainWindow->coefficient5, 10, 4));
+            this->ui->lineEdit_coefficient6->setText(QString::number(pMainWindow->coefficient6, 10, 4));
+            this->ui->lineEdit_coefficient7->setText(QString::number(pMainWindow->coefficient7, 10, 4));
+            this->ui->lineEdit_coefficient8->setText(QString::number(pMainWindow->coefficient8, 10, 4));
+            this->ui->lineEdit_coefficient9->setText(QString::number(pMainWindow->coefficient9, 10, 4));
+            this->ui->lineEdit_coefficient10->setText(QString::number(pMainWindow->coefficient10, 10, 4));
 
             // 6,7,设置压强
             h = steam.readLine();
@@ -294,6 +325,11 @@ Dialog::Dialog(QWidget *parent, unsigned char devIDH, unsigned char devIDL, unsi
             this->ui->lineEdit_coefficient3->setText(tr("1"));
             this->ui->lineEdit_coefficient4->setText(tr("1"));
             this->ui->lineEdit_coefficient5->setText(tr("1"));
+            this->ui->lineEdit_coefficient6->setText(tr("1"));
+            this->ui->lineEdit_coefficient7->setText(tr("1"));
+            this->ui->lineEdit_coefficient8->setText(tr("1"));
+            this->ui->lineEdit_coefficient9->setText(tr("1"));
+            this->ui->lineEdit_coefficient10->setText(tr("1"));
 
             // 6,7,设置压强
             //this->ui->lineEdit_Pmax->setText(tr("2000"));
@@ -327,7 +363,11 @@ Dialog::Dialog(QWidget *parent, unsigned char devIDH, unsigned char devIDL, unsi
         this->ui->lineEdit_coefficient2->setText(tr("1"));
         this->ui->lineEdit_coefficient3->setText(tr("1"));
         this->ui->lineEdit_coefficient4->setText(tr("1"));
-        this->ui->lineEdit_coefficient5->setText(tr("1"));
+        this->ui->lineEdit_coefficient6->setText(tr("1"));
+        this->ui->lineEdit_coefficient7->setText(tr("1"));
+        this->ui->lineEdit_coefficient8->setText(tr("1"));
+        this->ui->lineEdit_coefficient9->setText(tr("1"));
+        this->ui->lineEdit_coefficient10->setText(tr("1"));
 
         // 6,7, 设置压强
         //this->ui->lineEdit_Pmax->setText(tr("2000"));
@@ -655,6 +695,11 @@ bool Dialog::help_saveParam(){
     pMainWindow->coefficient3 = ui->lineEdit_coefficient3->text().toDouble();
     pMainWindow->coefficient4 = ui->lineEdit_coefficient4->text().toDouble();
     pMainWindow->coefficient5 = ui->lineEdit_coefficient5->text().toDouble();
+    pMainWindow->coefficient6 = ui->lineEdit_coefficient6->text().toDouble();
+    pMainWindow->coefficient7 = ui->lineEdit_coefficient7->text().toDouble();
+    pMainWindow->coefficient8 = ui->lineEdit_coefficient8->text().toDouble();
+    pMainWindow->coefficient9 = ui->lineEdit_coefficient9->text().toDouble();
+    pMainWindow->coefficient10 = ui->lineEdit_coefficient10->text().toDouble();
 
 
     // 13,读取设置的Pmax,Pmin
@@ -1034,7 +1079,8 @@ bool Dialog::help_saveParam(){
     steam<<tmpPeriod<<endl;                  // 2,写入自动保存间隔 或 手动保存
     steam<<pMainWindow->AutoSaveFile<<endl;  // 3,写入自动保存路径
     steam<<pMainWindow->Density<<endl;       // 4,写入密度
-    steam<<pMainWindow->coefficient1<<","<<pMainWindow->coefficient2<<","<<pMainWindow->coefficient3<<","<<pMainWindow->coefficient4<<","<<pMainWindow->coefficient5<<endl;
+    steam<<pMainWindow->coefficient1<<","<<pMainWindow->coefficient2<<","<<pMainWindow->coefficient3<<","<<pMainWindow->coefficient4<<","<<pMainWindow->coefficient5<<","<<
+           pMainWindow->coefficient6<<","<<pMainWindow->coefficient7<<","<<pMainWindow->coefficient8<<","<<pMainWindow->coefficient9<<","<<pMainWindow->coefficient10<<endl;
     for(int i = 0;i < 16; i++){              // 6,写入Pmax
         if(isSelected[i])
             steam<<pMainWindow->PmaxList[i]<<",";
@@ -1398,6 +1444,11 @@ void Dialog::on_pushButton_readH0_clicked()
         pMainWindow->coefficient3 = ui->lineEdit_coefficient3->text().toDouble();
         pMainWindow->coefficient4 = ui->lineEdit_coefficient4->text().toDouble();
         pMainWindow->coefficient5 = ui->lineEdit_coefficient5->text().toDouble();
+        pMainWindow->coefficient6 = ui->lineEdit_coefficient6->text().toDouble();
+        pMainWindow->coefficient7 = ui->lineEdit_coefficient7->text().toDouble();
+        pMainWindow->coefficient8 = ui->lineEdit_coefficient8->text().toDouble();
+        pMainWindow->coefficient9 = ui->lineEdit_coefficient9->text().toDouble();
+        pMainWindow->coefficient10 = ui->lineEdit_coefficient10->text().toDouble();
 
       pMainWindow->Density = ui->lineEdit_Density->text().toDouble();
       // 读取压强
@@ -1426,6 +1477,11 @@ void Dialog::handlerTimerOut(){         // 定时器处理函数
                pMainWindow->coefficient3 = ui->lineEdit_coefficient3->text().toDouble();
                pMainWindow->coefficient4 = ui->lineEdit_coefficient4->text().toDouble();
                pMainWindow->coefficient5 = ui->lineEdit_coefficient5->text().toDouble();
+               pMainWindow->coefficient6 = ui->lineEdit_coefficient6->text().toDouble();
+               pMainWindow->coefficient7 = ui->lineEdit_coefficient7->text().toDouble();
+               pMainWindow->coefficient8 = ui->lineEdit_coefficient8->text().toDouble();
+               pMainWindow->coefficient9 = ui->lineEdit_coefficient9->text().toDouble();
+               pMainWindow->coefficient10 = ui->lineEdit_coefficient10->text().toDouble();
                // 读取压强
                help_readP();
 
