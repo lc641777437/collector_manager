@@ -7,8 +7,9 @@
 #include <QTextStream>
 #include <QPointF>
 #include "qnamespace.h"
+#include <QVector>
 
-QVector<double> time;
+QVector<double> times;
 QVector<double> value[16];
 QFile file("./default.csv");
 QFile vfile("./v.csv");
@@ -477,7 +478,7 @@ void MainWindow::on_pushButton_SaveData_clicked()
         QFile::remove("./default.csv");
     }
 
-    time.clear();
+    times.clear();
     for(int i = 0; i < 16; i++){value[i].clear();}
     timeCount = 0;
 
@@ -543,7 +544,7 @@ void MainWindow::changeState(STATE_TYPE type)
         connectType = CONNECT_NULL;
         isStartCollect = false;
         if(ui->pushButton_StartCollect->text() == "继续采集")ui->pushButton_StartCollect->setText("开始采集");
-        time.remove(0, time.length());
+        times.remove(0, times.length());
         for(int i = 0; i < 16; i++){value[i].remove(0, value[i].length());}
         if(file.isOpen())file.close();
         break;

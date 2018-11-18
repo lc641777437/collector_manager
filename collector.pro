@@ -33,5 +33,3 @@ FORMS    += mainwindow.ui \
     dialog.ui
 
 RC_FILE += myico.rc
-
-UI_DIR=./UI

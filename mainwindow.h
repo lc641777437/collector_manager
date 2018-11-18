@@ -15,7 +15,7 @@
 #include "tcpclientthread.h"
 #include "dialog.h"
 
-#define MAX_SHOW_TIME 120 * 1000 //ms
+#define MAX_SHOW_TIME (120 * 1000) //ms
 #define TIMEOUTTIME (1000 * 2)
 
 

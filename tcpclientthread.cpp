@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 #include "tcpclientthread.h"
 
-extern QVector<double> time;
+extern QVector<double> times;
 extern QVector<double> value[16];   // value是一个vector的数组,即二维数组
 
 extern int samplerate;
@@ -291,8 +291,8 @@ void TcpClientThread::ADValue_proc(QByteArray &ReadBuf)
                       (data[pMainWindow->baseValue] - pMainWindow->H[pMainWindow->baseValue]);
             }
             // 将数据添加到画图线程中去，显示画图
-            if(time[time.length()-1] < MAX_SHOW_TIME){
-                time.append(pMainWindow->timeCount * 1000.0 / pMainWindow->samplerate);
+            if(times[times.length()-1] < MAX_SHOW_TIME){
+                times.append(pMainWindow->timeCount * 1000.0 / pMainWindow->samplerate);
                 // 将每个通道的值添加到相应的代表通道的数组中
                 for(int i = 0;i < 16;i++){
                      value[i].append(f[i]);
@@ -361,17 +361,17 @@ void TcpClientThread::ADValue_proc(QByteArray &ReadBuf)
 // 辅助函数 -- 时间值左移
 void TcpClientThread::time_MoveLeftInsert(double data)
 {
-    for(int i = 0;i < time.length()-1;i++){
-        time[i] = time[i+1];
+    for(int i = 0;i < times.length()-1;i++){
+        times[i] = times[i+1];
     }
-    time[time.length()-1] = data;
+    times[times.length()-1] = data;
 }
 // 辅助函数 --  数据值左移
 void TcpClientThread::data_MoveLeftInsert(int channal, double data)
 {
-    for(int i = 0;i < time.length()-1;i++){
+    for(int i = 0;i < times.length()-1;i++){
         value[channal][i] = value[channal][i+1];
     }
-    value[channal][time.length()-1] = data;
+    value[channal][times.length()-1] = data;
 }
 

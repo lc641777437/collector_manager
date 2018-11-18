@@ -7,7 +7,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-extern QVector<double> time;
+extern QVector<double> times;
 extern QVector<double> value[16];
 
 UartThread::UartThread(QString message, QObject *parent) :
@@ -224,8 +224,8 @@ void UartThread::ADValue_proc(QByteArray &ReadBuf)
         data[i] = tmp;
     }
 
-    if(time[time.length()-1] < MAX_SHOW_TIME){
-        time.append(pMainWindow->timeCount * 1000.0 / pMainWindow->samplerate);
+    if(times[times.length()-1] < MAX_SHOW_TIME){
+        times.append(pMainWindow->timeCount * 1000.0 / pMainWindow->samplerate);
         for(int i = 0;i < 16;i++){
             value[i].append(data[i]*5.0/0x780000);
         }
@@ -250,18 +250,18 @@ void UartThread::ADValue_proc(QByteArray &ReadBuf)
 
 void UartThread::time_MoveLeftInsert(double data)
 {
-    for(int i = 0;i < time.length()-1;i++){
-        time[i] = time[i+1];
+    for(int i = 0;i < times.length()-1;i++){
+        times[i] = times[i+1];
     }
-    time[time.length()-1] = data;
+    times[times.length()-1] = data;
 }
 
 void UartThread::data_MoveLeftInsert(int channal, double data)
 {
-    for(int i = 0;i < time.length()-1;i++){
+    for(int i = 0;i < times.length()-1;i++){
         value[channal][i] = value[channal][i+1];
     }
-    value[channal][time.length()-1] = data;
+    value[channal][times.length()-1] = data;
 }
 
 

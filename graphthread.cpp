@@ -8,7 +8,7 @@
 #include <QMenu>
 #include <QTextStream>
 
-extern QVector<double> time;
+extern QVector<double> times;
 extern QVector<double> value[16];
 
 /*************** 初始化 *************************************/
@@ -117,9 +117,9 @@ void GraphThread::lhc_ShowWave()
     int i = 0, count = 0;
 
     // 设置x轴
-    if(time[time.length()-1] > MAX_SHOW_TIME)
+    if(times[times.length()-1] > MAX_SHOW_TIME)
     {
-        pMainWindow->ui->widget->xAxis->setRange(time[0],time[time.length() - 1]);
+        pMainWindow->ui->widget->xAxis->setRange(times[0],times[times.length() - 1]);
     }
     else
     {
@@ -132,19 +132,19 @@ void GraphThread::lhc_ShowWave()
             switch(count++)
             {
             case 0:
-                pMainWindow->ui->widget->graph(0)->setData(time,value[i]);
+                pMainWindow->ui->widget->graph(0)->setData(times,value[i]);
                 pMainWindow->ui->widget->graph(0)->setVisible(true);
                 break;
             case 1:
-                pMainWindow->ui->widget->graph(1)->setData(time,value[i]);
+                pMainWindow->ui->widget->graph(1)->setData(times,value[i]);
                 pMainWindow->ui->widget->graph(1)->setVisible(true);
                 break;
             case 2:
-                pMainWindow->ui->widget->graph(2)->setData(time,value[i]);
+                pMainWindow->ui->widget->graph(2)->setData(times,value[i]);
                 pMainWindow->ui->widget->graph(2)->setVisible(true);
                 break;
             case 3:
-                pMainWindow->ui->widget->graph(3)->setData(time,value[i]);
+                pMainWindow->ui->widget->graph(3)->setData(times,value[i]);
                 pMainWindow->ui->widget->graph(3)->setVisible(true);
                 break;
             default:
