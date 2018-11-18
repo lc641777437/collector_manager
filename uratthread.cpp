@@ -146,6 +146,7 @@ void UartThread::UART_RX_Handler()
 
 void UartThread::ADValue_proc(QByteArray &ReadBuf)
 {
+    double V[16] = {0};
     int data[16] = {0};
     int data1,data2,data3;
 
@@ -222,6 +223,7 @@ void UartThread::ADValue_proc(QByteArray &ReadBuf)
             }
         }
         data[i] = tmp;
+        V[i] = tmp / 786432;
     }
 
     if(times[times.length()-1] < MAX_SHOW_TIME){

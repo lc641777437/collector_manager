@@ -417,21 +417,23 @@ void MainWindow::on_pushButton_StartCollect_clicked()
         if(ui->pushButton_StartCollect->text() == "开始采集"){
             uart_thread->my_serialport->write("StartToSend\r\n");
             qDebug()<<"(mainwindow.cpp)socket send:"<<"StartToSend\r\n";
-
+            timeCount = 0;
+            times.clear();
+            for(int i = 0; i < 16; i++){
+                value[i].clear();
+            }
             changeState(STATE_START_COLLECT);
             ui->pushButton_StartCollect->setText("结束采集");
         }else if(ui->pushButton_StartCollect->text() == "结束采集"){
             uart_thread->my_serialport->write("StopToSend\r\n");
             uart_thread->timer->start(TIMEOUTTIME);
             qDebug()<<"(mainwindow.cpp)uart send:"<<"StopToSend\r\n";
-
             changeState(STATE_STOP_COLLECT);
             ui->pushButton_StartCollect->setText("继续采集");
         }else if(ui->pushButton_StartCollect->text() == "继续采集"){
             uart_thread->my_serialport->write("StartToSend\r\n");
             //uart_thread->timer->start(TIMEOUTTIME);
             qDebug()<<"(mainwindow.cpp)uart send:"<<"StartToSend\r\n";
-
             changeState(STATE_START_COLLECT);
             ui->pushButton_StartCollect->setText("结束采集");
         }
@@ -446,14 +448,17 @@ void MainWindow::on_pushButton_StartCollect_clicked()
         if(ui->pushButton_StartCollect->text() == "开始采集"){
             tcpclient_thread->socket->write("StartToSend\r\n");
             qDebug()<<"(mainwindow.cpp)socket send:"<<"StartToSend\r\n";
-
+            timeCount = 0;
+            times.clear();
+            for(int i = 0; i < 16; i++){
+                value[i].clear();
+            }
             changeState(STATE_START_COLLECT);
             ui->pushButton_StartCollect->setText("结束采集");
         }else if(ui->pushButton_StartCollect->text() == "结束采集"){
             tcpclient_thread->socket->write("StopToSend\r\n");
             tcpclient_thread->timer->start(TIMEOUTTIME);
             qDebug()<<"(mainwindow.cpp)uart send:"<<"StopToSend\r\n";
-
             changeState(STATE_STOP_COLLECT);
             ui->pushButton_StartCollect->setText("继续采集");
         }else if(ui->pushButton_StartCollect->text() == "继续采集"){

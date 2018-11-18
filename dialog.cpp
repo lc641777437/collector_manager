@@ -140,31 +140,69 @@ Dialog::Dialog(QWidget *parent, unsigned char devIDH, unsigned char devIDL, unsi
     pCtrlH = ctrlH;
     // 6,设置工程流水号
     proId = _proId;
-    ui->lineEdit_projectID->setText(proId);
+    QByteArray temp_ba = proId.toLatin1();
+    const char *temp_c_str2 = temp_ba.data();
+    if(temp_c_str2[0] != '\?')ui->lineEdit_projectID->setText(proId);
     // 7,设置项目名称
     proName = _proName;
-    ui->lineEdit_projectName->setText(proName);
+    temp_ba = proName.toLatin1();
+    temp_c_str2 = temp_ba.data();
+    if(temp_c_str2[0] != '\?')
+        ui->lineEdit_projectName->setText(proName);
     // 8,设置测试点的名称
     for(int i = 0;i<16;i++){
         testPointName[i] = _testPointName[i];
     }
-    ui->lineEdit_test1->setText(testPointName[0]);
-    ui->lineEdit_test2->setText(testPointName[1]);
-    ui->lineEdit_test3->setText(testPointName[2]);
-    ui->lineEdit_test4->setText(testPointName[3]);
-    ui->lineEdit_test5->setText(testPointName[4]);
-    ui->lineEdit_test6->setText(testPointName[5]);
-    ui->lineEdit_test7->setText(testPointName[6]);
-    ui->lineEdit_test8->setText(testPointName[7]);
+    temp_ba = testPointName[0].toLatin1();
+    temp_c_str2 = temp_ba.data();
+    if(temp_c_str2[0] != '\?')ui->lineEdit_test1->setText(testPointName[0]);
+    temp_ba = testPointName[0].toLatin1();
+    temp_c_str2 = temp_ba.data();
+    if(temp_c_str2[0] != '\?')ui->lineEdit_test2->setText(testPointName[1]);
+    temp_ba = testPointName[0].toLatin1();
+    temp_c_str2 = temp_ba.data();
+    if(temp_c_str2[0] != '\?')ui->lineEdit_test3->setText(testPointName[2]);
+    temp_ba = testPointName[0].toLatin1();
+    temp_c_str2 = temp_ba.data();
+    if(temp_c_str2[0] != '\?')ui->lineEdit_test4->setText(testPointName[3]);
+    temp_ba = testPointName[0].toLatin1();
+    temp_c_str2 = temp_ba.data();
+    if(temp_c_str2[0] != '\?')ui->lineEdit_test5->setText(testPointName[4]);
+    temp_ba = testPointName[0].toLatin1();
+    temp_c_str2 = temp_ba.data();
+    if(temp_c_str2[0] != '\?')ui->lineEdit_test6->setText(testPointName[5]);
+    temp_ba = testPointName[0].toLatin1();
+    temp_c_str2 = temp_ba.data();
+    if(temp_c_str2[0] != '\?')ui->lineEdit_test7->setText(testPointName[6]);
+    temp_ba = testPointName[0].toLatin1();
+    temp_c_str2 = temp_ba.data();
+    if(temp_c_str2[0] != '\?')ui->lineEdit_test8->setText(testPointName[7]);
+    temp_ba = testPointName[0].toLatin1();
+    temp_c_str2 = temp_ba.data();
 
-    ui->lineEdit_test9->setText(testPointName[8]);
-    ui->lineEdit_test10->setText(testPointName[9]);
-    ui->lineEdit_test11->setText(testPointName[10]);
-    ui->lineEdit_test12->setText(testPointName[11]);
-    ui->lineEdit_test13->setText(testPointName[12]);
-    ui->lineEdit_test14->setText(testPointName[13]);
-    ui->lineEdit_test15->setText(testPointName[14]);
-    ui->lineEdit_test16->setText(testPointName[15]);
+    if(temp_c_str2[0] != '\?')ui->lineEdit_test9->setText(testPointName[8]);
+    temp_ba = testPointName[0].toLatin1();
+    temp_c_str2 = temp_ba.data();
+    if(temp_c_str2[0] != '\?')ui->lineEdit_test10->setText(testPointName[9]);
+    temp_ba = testPointName[0].toLatin1();
+    temp_c_str2 = temp_ba.data();
+    if(temp_c_str2[0] != '\?')ui->lineEdit_test11->setText(testPointName[10]);
+    temp_ba = testPointName[0].toLatin1();
+    temp_c_str2 = temp_ba.data();
+    if(temp_c_str2[0] != '\?')ui->lineEdit_test12->setText(testPointName[11]);
+    temp_ba = testPointName[0].toLatin1();
+    temp_c_str2 = temp_ba.data();
+    if(temp_c_str2[0] != '\?')ui->lineEdit_test13->setText(testPointName[12]);
+    temp_ba = testPointName[0].toLatin1();
+    temp_c_str2 = temp_ba.data();
+    if(temp_c_str2[0] != '\?')ui->lineEdit_test14->setText(testPointName[13]);
+    temp_ba = testPointName[0].toLatin1();
+    temp_c_str2 = temp_ba.data();
+    if(temp_c_str2[0] != '\?')ui->lineEdit_test15->setText(testPointName[14]);
+    temp_ba = testPointName[0].toLatin1();
+    temp_c_str2 = temp_ba.data();
+    if(temp_c_str2[0] != '\?')ui->lineEdit_test16->setText(testPointName[15]);
+
 
      /******************** (2),setting.csv文件保存的配置 **************/
     QFile mfile("./Setting.csv");
@@ -363,6 +401,7 @@ Dialog::Dialog(QWidget *parent, unsigned char devIDH, unsigned char devIDL, unsi
         this->ui->lineEdit_coefficient2->setText(tr("1"));
         this->ui->lineEdit_coefficient3->setText(tr("1"));
         this->ui->lineEdit_coefficient4->setText(tr("1"));
+        this->ui->lineEdit_coefficient5->setText(tr("1"));
         this->ui->lineEdit_coefficient6->setText(tr("1"));
         this->ui->lineEdit_coefficient7->setText(tr("1"));
         this->ui->lineEdit_coefficient8->setText(tr("1"));

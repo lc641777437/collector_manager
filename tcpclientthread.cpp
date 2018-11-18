@@ -268,10 +268,11 @@ void TcpClientThread::ADValue_proc(QByteArray &ReadBuf)
                 break;
             }
         }
-
+        V[i] = tmp / 786432;
         tmp = (tmp/393216.0 - 4)/16.0*(pMainWindow->PmaxList[i] - pMainWindow->PminList[i])
                   + pMainWindow->PminList[i];
         data[i] = tmp / (9.8 * pMainWindow->Density);
+
         // 保存初始H值
         if(pMainWindow->readInitialValue){
             if(pMainWindow->H[i] == 0) {
@@ -281,8 +282,6 @@ void TcpClientThread::ADValue_proc(QByteArray &ReadBuf)
                 pMainWindow->H[i] = ( pMainWindow->H[i] + data[i] ) / 2.0;
             }
         }
-
-        V[i] = tmp / 786432;
     }
     if(pMainWindow->readInitialValue == false){
             // 计算挠度值
@@ -322,12 +321,12 @@ void TcpClientThread::ADValue_proc(QByteArray &ReadBuf)
             // 数据文件保存1: 16个扰度值
             for(int i = 0; i < 16; i++){
                 if(pMainWindow->isChannal[i])
-                    steam<<f[i]<<",";
+                    steam<<f[i]<<","<<V[i]<<",";
                 else
-                    steam<<"-,";
+                    steam<<"-,-,";
             }
             // 数据文件保存1: 16个平均值
-            if(id == 0){
+            if(0){
                 for(int i = 0; i < 16; i++){
                     if(pMainWindow->isChannal[i]){
                         steam<<(f_avg[i]/200.0)<<",";
